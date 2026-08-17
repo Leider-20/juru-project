@@ -1,0 +1,336 @@
+.desktop-1,
+.desktop-1 * {
+  box-sizing: border-box;
+}
+.desktop-1 {
+  background: #ffffff;
+  height: 3050px;
+  position: relative;
+  overflow: hidden;
+}
+.frame-2 {
+  background: rgba(145, 145, 119, 0.5);
+  width: 1440px;
+  height: 59px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.iconoir-iconoir {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  left: 1316px;
+  top: 22px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+.group {
+  width: 75%;
+  height: 75%;
+  position: absolute;
+  right: 12.5%;
+  left: 12.5%;
+  bottom: 12.5%;
+  top: 12.5%;
+  overflow: visible;
+}
+.griddy-icons-facebook {
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  left: 1339px;
+  top: 21px;
+  overflow: visible;
+  aspect-ratio: 1;
+}
+.hugeicons-whatsapp {
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  left: 1368px;
+  top: 23px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+.group2 {
+  width: 83.33%;
+  height: 83.33%;
+  position: absolute;
+  right: 8.33%;
+  left: 8.33%;
+  bottom: 8.33%;
+  top: 8.33%;
+  overflow: visible;
+}
+.uit-youtube {
+  width: 19px;
+  height: 19px;
+  position: absolute;
+  left: 1391px;
+  top: 20px;
+  overflow: visible;
+  aspect-ratio: 1;
+}
+.sobre-nosotros {
+  color: #000000;
+  text-align: left;
+  font-family: "Fredoka-Light", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  position: absolute;
+  left: 87px;
+  top: 84px;
+}
+.colecci-n-de-entorno-digital {
+  color: #000000;
+  text-align: left;
+  font-family: "Fredoka-Light", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  position: absolute;
+  left: 247px;
+  top: 84px;
+}
+.memorias {
+  color: #000000;
+  text-align: left;
+  font-family: "Fredoka-Light", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  position: absolute;
+  left: 1034px;
+  top: 84px;
+}
+.formar-la-palabra {
+  color: #000000;
+  text-align: left;
+  font-family: "Fredoka-Light", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  position: absolute;
+  left: 1197px;
+  top: 84px;
+}
+.component-1 {
+  width: 156px;
+  height: 49px;
+  position: absolute;
+  left: 658px;
+  top: 68px;
+}
+.frame-3 {
+  width: 137px;
+  height: 34px;
+  position: absolute;
+  left: 10px;
+  top: 8px;
+}
+.juru {
+  color: rgba(80, 80, 30, 0.5);
+  text-align: left;
+  font-family: "Fredoka-Light", sans-serif;
+  font-size: 50px;
+  font-weight: 300;
+  position: absolute;
+  left: 5px;
+  top: -15px;
+  width: 132px;
+  height: 60px;
+}
+.ellipse-1 {
+  background: #e97831;
+  border-radius: 50%;
+  width: 6px;
+  height: 3px;
+  position: absolute;
+  left: 47px;
+  top: 3px;
+}
+.ellipse-5 {
+  background: #919177;
+  border-radius: 50%;
+  width: 5px;
+  height: 4px;
+  position: absolute;
+  left: 48px;
+  top: 11px;
+}
+.ellipse-6 {
+  background: #e97831;
+  border-radius: 50%;
+  width: 6px;
+  height: 3px;
+  position: absolute;
+  left: 115px;
+  top: 3px;
+}
+.ellipse-7 {
+  background: #919177;
+  border-radius: 50%;
+  width: 5px;
+  height: 4px;
+  position: absolute;
+  left: 116px;
+  top: 11px;
+}
+.rectangle-1 {
+  background: #d9d9d9;
+  width: 481px;
+  height: 258px;
+  position: absolute;
+  left: 480px;
+  top: 1015px;
+}
+.somos-un-grupo-de-mujeres-emprendedoras-so-adoras-con-el-don-en-las-manos-para-poder-hacer-y-crear-piezas-artesanas-marina-reyes {
+  color: #50501e;
+  text-align: left;
+  font-family: "-", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 579px;
+  top: 1086px;
+  width: 307px;
+}
+.somos-un-grupo-de-mujeres-emprendedoras-so-adoras-con-el-don-en-las-manos-para-poder-hacer-y-crear-piezas-artesanas-marina-reyes-span {
+  font-family: "Helvetica-Regular", sans-serif;
+}
+.somos-un-grupo-de-mujeres-emprendedoras-so-adoras-con-el-don-en-las-manos-para-poder-hacer-y-crear-piezas-artesanas-marina-reyes-span2 {
+  font-family: "Helvetica-Bold", sans-serif;
+  font-weight: 700;
+}
+.rectangle-2 {
+  background: #d9d9d9;
+  width: 481px;
+  height: 258px;
+  position: absolute;
+  left: 480px;
+  top: 1298px;
+}
+.rectangle-3 {
+  background: #d9d9d9;
+  width: 481px;
+  height: 258px;
+  position: absolute;
+  left: 480px;
+  top: 1581px;
+}
+.somos-mujeres-emprendedoras-que-con-esfuerzo-convertimos-nuestros-sue-os-realidad-y-que-con-determinaci-n-nos-hacemos-due-as-de-nuestro-propio-xito-nosotras-somos-juru-somos-uni-n-karen-salazar {
+  color: #50501e;
+  text-align: left;
+  font-family: "-", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 578px;
+  top: 1623px;
+  width: 314px;
+}
+.somos-mujeres-emprendedoras-que-con-esfuerzo-convertimos-nuestros-sue-os-realidad-y-que-con-determinaci-n-nos-hacemos-due-as-de-nuestro-propio-xito-nosotras-somos-juru-somos-uni-n-karen-salazar-span {
+  font-family: "Helvetica-Oblique", sans-serif;
+}
+.somos-mujeres-emprendedoras-que-con-esfuerzo-convertimos-nuestros-sue-os-realidad-y-que-con-determinaci-n-nos-hacemos-due-as-de-nuestro-propio-xito-nosotras-somos-juru-somos-uni-n-karen-salazar-span2 {
+  font-family: "Helvetica-BoldOblique", sans-serif;
+}
+.un-todo-una-unidad-un-grupo-que-trabaja-unido-con-un-solo-proposito-el-esfuerzo-de-nosotras-ha-logrado-fortalecernos-e-ir-creciendo-y-aprendiendo-el-arte-de-crear-rosalbina-valencia {
+  color: #50501e;
+  text-align: left;
+  font-family: "-", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 582px;
+  top: 1358px;
+  width: 307px;
+}
+.un-todo-una-unidad-un-grupo-que-trabaja-unido-con-un-solo-proposito-el-esfuerzo-de-nosotras-ha-logrado-fortalecernos-e-ir-creciendo-y-aprendiendo-el-arte-de-crear-rosalbina-valencia-span {
+  font-family: "Helvetica-Regular", sans-serif;
+}
+.un-todo-una-unidad-un-grupo-que-trabaja-unido-con-un-solo-proposito-el-esfuerzo-de-nosotras-ha-logrado-fortalecernos-e-ir-creciendo-y-aprendiendo-el-arte-de-crear-rosalbina-valencia-span2 {
+  font-family: "Helvetica-BoldOblique", sans-serif;
+}
+.somos {
+  color: #e97831;
+  text-align: left;
+  font-family: "HelveticaLight-Regular", sans-serif;
+  font-size: 80px;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  position: absolute;
+  left: 1306.06px;
+  top: 1624.02px;
+  transform-origin: 0 0;
+  transform: rotate(-90.012deg) scale(1, 1);
+}
+.qui-nes {
+  color: #e97831;
+  text-align: left;
+  font-family: "Helvetica-Bold", sans-serif;
+  font-size: 96px;
+  font-weight: 700;
+  position: absolute;
+  left: 1235.1px;
+  top: 1784.04px;
+  width: 453px;
+  height: 141px;
+  transform-origin: 0 0;
+  transform: rotate(-90.012deg) scale(1, 1);
+}
+.de-donde-venimos {
+  color: #52524f;
+  text-align: left;
+  font-family: "Helvetica-Bold", sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  position: absolute;
+  left: 390px;
+  top: 2802px;
+  width: 746px;
+  height: 63px;
+}
+.frame {
+  width: 1440px;
+  height: 784px;
+  position: absolute;
+  left: -2px;
+  top: 1993px;
+  overflow: visible;
+}
+.rectangle-4 {
+  background: #d9d9d9;
+  width: 481px;
+  height: 258px;
+  position: absolute;
+  left: 480px;
+  top: 1864px;
+}
+.somos-un-grupo-de-mujeres-empoderadas-que-hemos-trabajado-con-dedicaci-n-un-proceso-lleno-de-sentimientos-por-cada-producto-cocido-y-tejido-a-mano-deyanira-salazar {
+  color: #50501e;
+  text-align: left;
+  font-family: "-", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  position: absolute;
+  left: 578px;
+  top: 1906px;
+  width: 314px;
+}
+.somos-un-grupo-de-mujeres-empoderadas-que-hemos-trabajado-con-dedicaci-n-un-proceso-lleno-de-sentimientos-por-cada-producto-cocido-y-tejido-a-mano-deyanira-salazar-span {
+  font-family: "Helvetica-Regular", sans-serif;
+}
+.somos-un-grupo-de-mujeres-empoderadas-que-hemos-trabajado-con-dedicaci-n-un-proceso-lleno-de-sentimientos-por-cada-producto-cocido-y-tejido-a-mano-deyanira-salazar-span2 {
+  font-family: "Helvetica-BoldOblique", sans-serif;
+}
+.ellipse-8 {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px;
+  width: 41px;
+  height: 39px;
+  position: absolute;
+  left: 710px;
+  top: 2880px;
+}
