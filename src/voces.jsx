@@ -15,7 +15,7 @@ import juruLogo from './assets/juru-logo.jpeg'
 // Aclara u oscurece un color hexadecimal. percent > 0 aclara, < 0 oscurece.
 function shade(hex, percent) {
   const num = parseInt(hex.replace("#", ""), 16);
-  const amt = Math.round(2.55 * percent);
+  const amt = Math.round(2.55 * percent); 
   let r = (num >> 16) + amt;
   let g = ((num >> 8) & 0x00ff) + amt;
   let b = (num & 0x0000ff) + amt;
