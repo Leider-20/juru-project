@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Play, Pause, MapPin, Clock, Mic, Square, Trash2 } from "lucide-react";
-import juruLogo from './assets/juru-logo.jpeg'
+import juruLogo from './images/juru-logo.jpeg'
 
 // ---------------------------------------------------------------------------
 // JURU — proyecto propio inspirado en la idea de un "quipu" (hilos con
