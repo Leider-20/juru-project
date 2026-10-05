@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Menu, X, MessageCircle, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import juruLogo from "./images/juru-logo.png";
+import juruHierbas from "./images/juru-hierbas.png";
+import juruMaquina from "./images/juru-maquina.png";
 import juruAprendizaje from "./images/juru-aprendizaje.png";
 import jurubolso from "./images/juru-bolso.png";
 import juruCoser from "./images/juru-coser.png";
@@ -38,13 +40,19 @@ const NAV_LINKS_IZQ = [
 const NAV_LINKS_DER = [{ label: "Memorias", href: "#novedades" }];
 
 const GALLERY = [
+  { src: juruHierbas, alt: "Ofrenda de hierbas y flores sobre tela" },
+  { src: juruMaquina, alt: "Máquina de coser bajo un techo de zinc" },
   { src: juruTaller, alt: "Mujeres alrededor de una mesa haciendo manualidades" },
-  { src: juruAprendizaje, alt: "Mujeres compartiendo un espacio de aprendizaje" },
-  { src: jurubolso, alt: "Bolso artesanal elaborado por JURU" },
-  { src: juruCoser, alt: "Artesana cosiendo una pieza textil" },
-  { src: juruCaseta, alt: "Caseta comunitaria del territorio de JURU" },
-  { src: juruMolienda, alt: "Proceso comunitario de molienda" },
-  { src: juruPanela, alt: "Panela elaborada en el territorio" },
+];
+
+const RELATO_IMAGES = [
+  juruTaller,
+  juruAprendizaje,
+  jurubolso,
+  juruCoser,
+  juruCaseta,
+  juruMolienda,
+  juruPanela,
 ];
 
 // Retratos que se muestran en la sección "¿Quiénes somos?" — los rostros
@@ -1278,7 +1286,7 @@ export default function Home() {
                     transform: RUTA[hoverIdx].x > 250 ? "translate(-100%, -50%)" : "translate(0, -50%)",
                   }}
                 >
-                  <img src={GALLERY[RUTA[hoverIdx].detalle.img].src} alt={RUTA[hoverIdx].detalle.titulo} />
+                  <img src={RELATO_IMAGES[RUTA[hoverIdx].detalle.img]} alt={RUTA[hoverIdx].detalle.titulo} />
                   <p className="map-detail-text">{RUTA[hoverIdx].detalle.texto}</p>
                   <p className="map-detail-num">{RUTA[hoverIdx].label}</p>
                 </div>
