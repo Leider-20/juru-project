@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 import { Menu, X, MessageCircle, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import juruLogo from "./images/juru-logo.png";
-import juruHierbas from "./images/juru-hierbas.png";
+import juruAprendizaje from "./images/juru-aprendizaje.png";
+import jurubolso from "./images/juru-bolso.png";
+import juruCoser from "./images/juru-coser.png";
+import juruCaseta from "./images/juru-caseta.png";
+import juruMolienda from "./images/juru-molienda.png";
+import juruPanela from "./images/juru-panela.png";
 import juruTerritorio from "./images/juru-territorio.png";
 import juruHerramientas from "./images/juru-herramientas.png";
 import juruTaller from "./images/juru-taller.jpg";
-import juruMaquina from "./images/juru-maquina.png";
-import testimonioFoto from "./images/juru-testimonio.png";
 import novedadEventos from "./images/juru-evento.png";
 import novedadProductos from "./images/juru-producto.png";
 import novedadLibro from "./images/juru-libro.png";
 import texturaTopografica from "./images/juru-lineas.png";
-import ilustracionFamilia from "./images/juru-familia.png";
+import texturaQuienesSomos from "./images/juru-textura-2.png";
+import ilustracionSeñoras from "./images/juru-senoras.png";
+import mapaTerritorio from "./images/juru-mapa-territorio.png";
 
 // Retratos de las mujeres de JURU — colócalos en src/images/ con estos
 // nombres de archivo (o cambia las rutas de abajo por las tuyas).
@@ -33,9 +38,13 @@ const NAV_LINKS_IZQ = [
 const NAV_LINKS_DER = [{ label: "Memorias", href: "#novedades" }];
 
 const GALLERY = [
-  { src: juruHierbas, alt: "Ofrenda de hierbas y flores sobre tela" },
   { src: juruTaller, alt: "Mujeres alrededor de una mesa haciendo manualidades" },
-  { src: juruMaquina, alt: "Máquina de coser bajo un techo de zinc" },
+  { src: juruAprendizaje, alt: "Mujeres compartiendo un espacio de aprendizaje" },
+  { src: jurubolso, alt: "Bolso artesanal elaborado por JURU" },
+  { src: juruCoser, alt: "Artesana cosiendo una pieza textil" },
+  { src: juruCaseta, alt: "Caseta comunitaria del territorio de JURU" },
+  { src: juruMolienda, alt: "Proceso comunitario de molienda" },
+  { src: juruPanela, alt: "Panela elaborada en el territorio" },
 ];
 
 // Retratos que se muestran en la sección "¿Quiénes somos?" — los rostros
@@ -50,9 +59,24 @@ const ARTESANAS = [
 
 const TESTIMONIOS = [
   {
-    foto: testimonioFoto,
     texto: "Somos un grupo de mujeres empoderadas, que hemos trabajado con dedicación, un proceso lleno de sentimientos por cada producto cocido y tejido a mano.",
     autora: "Deyanira Salazar",
+  },
+  {
+    texto: "Somos Mujeres emprendedoras que con esfuerzo convertimos nuestros sueños realidad y que con determinación, nos hacemos dueñas de nuestro propio éxito. Nosotras somos JURU, Somos unión.",
+    autora: "Karen Salazar",
+  },
+  {
+    texto: "Somos huella, somos perseverancia, compromiso y unión.",
+    autora: "Albertina",
+  },
+  {
+    texto: "Somos un todo, una unidad, un grupo que trabaja unido con un solo propósito. El esfuerzo de nosotras ha logrado fortalecernos e ir creciendo y aprendiendo el arte de crear.",
+    autora: "Miriam Salazar",
+  },
+  {
+    texto: "Somos un grupo de mujeres emprendedoras, soñadoras, con el don en las manos para poder hacer y crear piezas artesanas.",
+    autora: "Yamileth Reyes",
   },
 ];
 
@@ -91,74 +115,40 @@ const NOVEDADES = [
 const PUNTOS = {
   inicio: { x: 20, y: 16, isEnd: true },
   p31: {
-    x: 108, y: 50, label: "3.1",
-    detalle: { titulo: "Relato 3.1", texto: "La molienda es el lugar donde se transforma la caña de azúcar en panela. Es el sustento económico y cultural de muchas familias.", img: 1 },
+    x: -15, y: 70,
+    detalle: { titulo: "Relato 3.1", texto: " La molienda es el lugar donde se transforma la caña de azúcar en panela. Es el corazón económico y cultural de muchas familiasar es una comunidad que también se unió a La Trina en 1996. Nuestro principal  fuente de sustento siempre fue la agricultura, donde cultivamos caña, pasto y pancoger. Nuestro territorio es un ejemplo de organización y liderazgo colectivo.", img: 5},
   },
   p23: {
-    x: 15, y: 152, label: "2.3",
-    detalle: { titulo: "Relato 2.3", texto: "Historias de trabajo y saberes de la comunidad.", img: 2 },
+    x: 40, y: 262, 
+    detalle: { titulo: "Relato 2.3", texto: "Impulsamos la creatividad colectiva a través de talleres donde el diseño y la innovación se convierten en herramientas para transformar ideas en experiencias significativas. Desde la experimentación con materiales hasta la creación de propuestas sostenibles, nuestros espacios invitan a imaginar, construir y compartir nuevas formas de habitar y narrar el territorio.", img: 0 },
   },
   p32: {
-    x: 200, y: 141, label: "3.2",
-    detalle: { titulo: "Relato 3.2", texto: "Un momento compartido entre mujeres de la red.", img: 0 },
+    x: 215, y: 170,
+    detalle: { titulo: "Relato 3.2", texto: "La caseta de la comunidad de Gaspar es el centro y taller de JURU. ", img: 4 },
   },
-  juru: { x: 289, y: 148, label: "JURU", isPin: true },
-  p49: {
-    x: 386, y: 163, label: "4.9",
-    inactivo: true,
-    detalle: { titulo: "Relato 4.9", texto: "Este relato todavía no está disponible.", img: 0 },
-  },
-  p22: {
-    x: 96, y: 246, label: "2.2",
-    detalle: { titulo: "Relato 2.2", texto: "Un oficio aprendido y transmitido con las manos.", img: 1 },
-  },
+
   p43: {
-    x: 316, y: 352, label: "4.3",
-    detalle: { titulo: "Relato 4.3", texto: "Una historia de sororidad y comunidad.", img: 2 },
+    x: 228, y: 352,
+    detalle: { titulo: "Relato 4.3", texto: "En el año 2024 JURU hibridó su proceso manufacturero.", img: 3 },
   },
   p21: {
-    x: 131, y: 398, label: "2.1",
-    detalle: { titulo: "Relato 2.1", texto: "El inicio de un camino propio de trabajo.", img: 0 },
+    x: 100, y: 410,
+    detalle: { titulo: "Relato 2.1", texto: "En la comunidad de gaspar se iniciaron las clases con la elaboración de los moldes por parte del tallerista (Un neceser), buscando realizar un producto mas pequeño y unisex. Los moldes fueron copiados y cortados por los estudiantes en cartulina, posteriormente en textil y luego se armaron los prototipos con hilo y aguja. Los cierres, herrajes y textiles se dan por parte del tallerista.", img: 1 },
   },
   p13: {
-    x: 196, y: 512, label: "1.3",
-    detalle: { titulo: "Relato 1.3", texto: "Una reflexión íntima sobre lo que somos.", img: 1 },
+    x: 65, y: 512,
+    detalle: { titulo: "Relato 1.3", texto: "JURU nace en 2018 en el Resguardo La Trina, como una iniciativa de mujeres que encuentran en la artesanía una forma de preservar sus saberes, fortalecer su autonomía y mantener vivo el vínculo con su territorio. A través del trabajo colectivo, crean productos que transmiten su identidad, memoria y relación con la tierra.", img: 2 },
   },
-  p42: {
-    x: 366, y: 518, label: "4.2",
-    detalle: { titulo: "Relato 4.2", texto: "Apoyo entre mujeres en momentos difíciles.", img: 2 },
-  },
-  p41: {
-    x: 272, y: 584, label: "4.1",
-    detalle: { titulo: "Relato 4.1", texto: "El primer paso para pedir o dar una mano.", img: 0 },
-  },
+
   p12: {
-    x: 171, y: 678, label: "1.2",
-    detalle: { titulo: "Relato 1.2", texto: "Un momento para sí misma, entre tantos días.", img: 1 },
+    x: 63, y: 693,
+    detalle: { titulo: "Relato 1.2", texto: "Desde el resguardo Indigena La Trina, Hemos trabajado en Juru en una de las 7 comunidades que le abraza. Al suroccidente, Gaspar es una comunidad que también se unió a La Trina en 1996. Nuestro principal  fuente de sustento siempre fue la agricultura, donde cultivamos caña, pasto y pancoger. Nuestro territorio es un ejemplo de organización y liderazgo colectivo. ", img: 6 },
   },
-  p11: {
-    x: 171, y: 782, label: "1.1",
-    detalle: { titulo: "Relato 1.1", texto: "Quién es ella, contado con sus propias palabras.", img: 2 },
-  },
+
   fin: { x: 159, y: 892, isEnd: true },
 };
 
 const RUTA = Object.values(PUNTOS);
-const TRONCO = [PUNTOS.inicio, PUNTOS.p31, PUNTOS.p23, PUNTOS.p22, PUNTOS.p21, PUNTOS.p13, PUNTOS.p12, PUNTOS.p11, PUNTOS.fin];
-const LAZO = [PUNTOS.p31, PUNTOS.p32, PUNTOS.p49, PUNTOS.p43, PUNTOS.p42, PUNTOS.p41, PUNTOS.p13];
-
-function routePath(points) {
-  let d = `M ${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const curr = points[i];
-    const midX = (prev.x + curr.x) / 2;
-    const midY = (prev.y + curr.y) / 2;
-    d += ` Q ${prev.x} ${midY} ${midX} ${midY} Q ${curr.x} ${midY} ${curr.x} ${curr.y}`;
-  }
-  return d;
-}
-
 const EASE_FIGMA = "cubic-bezier(0.42, 0, 1, 1)";
 const EASE_SLIDE = "cubic-bezier(0, 0, 0.58, 1)";
 
@@ -201,13 +191,12 @@ function Reveal({ children, className = "", delay = 0, duration = 500 }) {
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [faceIdx, setFaceIdx] = useState(0);
-  const [hoverIdx, setHoverIdx] = useState(1); // arranca mostrando el punto 3.1
+  const [hoverIdx, setHoverIdx] = useState(null);
 
   // ---- Scroll-pinned "tarjetas apiladas" ---------------------------------
-  const MAX_DIST = 2;         // a partir de esta distancia, el efecto ya no crece más
-  const MAX_SHRINK = 0.45;    // encogimiento máximo (scale mínimo = 1 - esto = 0.55)
-  const MAX_BLUR = 6;         // blur máximo en px
-  const PEEK_PERCENT = 14;    // % del panel que se deja siempre visible de cada tarjeta ya pasada
+  const MAX_SHRINK = 0.25;    // la tarjeta que queda atrás termina en scale(.75)
+  const MAX_BLUR = 2.5;       // blur máximo de la tarjeta anterior
+  const STACK_OFFSET = 0;     // las tarjetas se mantienen apiladas
 
   const galleryWrapRef = useRef(null);
   const [scales, setScales] = useState(GALLERY.map(() => 1));
@@ -257,22 +246,16 @@ export default function Home() {
       const n = GALLERY.length;
       const floatIndex = progress * (n - 1);
 
-      // ENTRADA EN PILA: cada tarjeta tiene su propio "cajón" fijo dentro
-      // de la pila: la tarjeta i, una vez que llega, se queda para
-      // siempre en translateY = i * PEEK_PERCENT. Como el z-index es
-      // ascendente por índice, cada una tapa a todas las anteriores
-      // excepto por esa franja — así se ven TODAS las tarjetas ya
-      // pasadas al mismo tiempo, apiladas, no solo la inmediata anterior.
+      // La siguiente tarjeta sube desde abajo mientras la actual se
+      // reduce y desenfoca, como una pila de tarjetas fija.
       const nextTranslateYs = GALLERY.map((_, i) => {
-        const target = i * PEEK_PERCENT;
-        const entrada = Math.min(Math.max(floatIndex - (i - 1), 0), 1);
-        return 100 - entrada * (100 - target);
+        const target = i * STACK_OFFSET;
+        if (i <= floatIndex) return target;
+        const entrada = Math.min((i - floatIndex) * 100, 100);
+        return target + entrada;
       });
 
-      // RETIRADA: una vez que una tarjeta ya fue cubierta por la
-      // siguiente, se encoge y difumina (transform-origin arriba, por
-      // eso el borde superior se queda fijo y es lo único que asoma).
-      const dist = GALLERY.map((_, i) => Math.min(Math.max(floatIndex - i, 0), MAX_DIST) / MAX_DIST);
+      const dist = GALLERY.map((_, i) => Math.min(Math.max(floatIndex - i, 0), 1));
 
       setScales(dist.map((t) => 1 - t * MAX_SHRINK));
       setBlurs(dist.map((t) => t * MAX_BLUR));
@@ -353,9 +336,11 @@ export default function Home() {
 
         .hero {
           position: relative;
+          isolation: isolate;
           height: min(100vh, 820px);
           min-height: 650px;
           overflow: hidden;
+          background: linear-gradient(135deg, #4a4a2f, #7a5a3f);
           color: white;
         }
         .hero-video {
@@ -365,11 +350,13 @@ export default function Home() {
           height: 100%;
           object-fit: cover;
           object-position: center;
+          z-index: -2;
         }
         .hero-shade {
           position: absolute;
           inset: 0;
           background: linear-gradient(180deg, rgba(20,24,10,.28) 0%, rgba(20,24,10,.18) 45%, rgba(20,24,10,.48) 100%);
+          z-index: -1;
         }
         .hero-fade {
           position: absolute;
@@ -390,7 +377,11 @@ export default function Home() {
           backdrop-filter: blur(2px);
         }
         .hero-nav-logo { justify-self: start; }
-        .hero-nav-spacer { justify-self: end; }
+        .hero-nav-spacer {
+          justify-self: end;
+          display: flex;
+          align-items: center;
+        }
         .hero-logo { width: 86px; height: auto; }
         .hero-links {
           justify-self: center;
@@ -427,6 +418,26 @@ export default function Home() {
           border-radius: 999px;
         }
         .hero-links a.nav-active::after { display: none; }
+        .hero-links a.nav-club {
+          padding: 9px 22px;
+          border-radius: 999px;
+          background: #d3da63;
+          color: #272626;
+          text-shadow: none;
+        }
+        .hero-links a.nav-club:hover { opacity: 1; transform: translateY(-1px); filter: brightness(1.04); }
+        .hero-links a.nav-club::after { display: none; }
+        .hero-club {
+          padding: 9px 22px;
+          border-radius: 999px;
+          background: #d3da63;
+          color: #272626;
+          text-decoration: none;
+          font: 400 14px 'Fredoka', sans-serif;
+          white-space: nowrap;
+          transition: filter 300ms var(--ease-slide), transform 300ms var(--ease-slide);
+        }
+        .hero-club:hover { filter: brightness(1.05); transform: translateY(-1px); }
         .mobile-menu-button { display: none; border: 0; background: transparent; color: white; }
 
         .hero-content {
@@ -496,16 +507,42 @@ export default function Home() {
           font: 400 35px/1.15 'Judson', serif;
         }
 
+        .story-visual {
+          position: relative;
+          overflow: hidden;
+          background: var(--juru-cream);
+        }
+        .story-texture {
+          position: absolute;
+          z-index: 0;
+          top: 0;
+          left: -240px;
+          width: min(58vw, 760px);
+          height: 100%;
+          object-fit: cover;
+          object-position: top left;
+          opacity: .28;
+          mix-blend-mode: multiply;
+          transform: rotate(-8deg);
+          transform-origin: top left;
+          filter: sepia(.15) saturate(.55);
+          pointer-events: none;
+        }
+
         .gallery-wrap {
           position: relative;
-          height: 290vh;
+          height: 115vh;
+          padding-top: 72px;
+          overflow: hidden;
+          background: transparent;
         }
         .gallery-sticky {
           position: sticky;
-          top: 0;
-          height: 100vh;
+          top: 72px;
+          height: calc(100vh - 72px);
           min-height: 650px;
-          padding: 30px 5vw 75px;
+          padding: 0 5vw 75px;
+          z-index: 1;
         }
         .gallery-stack {
           position: relative;
@@ -526,40 +563,33 @@ export default function Home() {
         }
         .gallery-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 300ms var(--ease-slide); }
         .gallery-card:hover img { transform: scale(1.025); }
-        .gallery-fade {
-          position: absolute;
-          z-index: 20;
-          left: 0; right: 0; bottom: 0;
-          height: 130px;
-          pointer-events: none;
-          background: linear-gradient(180deg, rgba(247,242,228,0) 0%, var(--juru-cream) 100%);
-        }
-
         .who {
           position: relative;
-          padding: 70px 24px 85px;
+          padding: 35px 24px 85px;
           overflow: hidden;
-          background: var(--juru-cream);
+          background: transparent;
         }
-        .who-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+        .who-inner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; }
         .who-heading {
           margin: 0 0 34px;
-          text-align: right;
+          text-align: center;
           color: var(--juru-brown);
           font: 400 50px 'Alevia DEMO', 'Judson', serif;
         }
         .who-layout {
-          display: grid;
-          grid-template-columns: 250px minmax(0, 1fr);
-          gap: 70px;
-          align-items: start;
+          max-width: 1000px;
+          margin: 0 auto;
         }
         .who-art { width: 100%; max-width: 230px; margin: 15px auto 0; opacity: .85; }
         .who-copy {
+          max-width: 1000px;
+          margin: 0 auto;
           color: var(--juru-text);
           font: 400 30px/1.35 'Fredoka', sans-serif;
+          text-align: justify;
         }
         .who-copy p { margin: 0 0 22px; }
+        .who-welcome { text-align: center; }
 
         .who-slider {
           position: relative;
@@ -622,45 +652,59 @@ export default function Home() {
 
         .testimonial {
           position: relative;
-          height: 610px;
+          height: 620px;
           min-height: 520px;
           overflow: hidden;
+          background: #1f1b14;
         }
-        .testimonial img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .testimonial img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
         .testimonial::after {
           content: '';
-          position: absolute; inset: 0;
-          background: linear-gradient(90deg, rgba(20,16,10,.76) 0%, rgba(20,16,10,.34) 45%, rgba(20,16,10,.08) 100%);
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+          background: linear-gradient(90deg, rgba(20,16,10,.78) 0%, rgba(20,16,10,.48) 32%, rgba(20,16,10,.08) 68%, rgba(20,16,10,0) 100%);
         }
         .testimonial-content {
-          position: relative;
+          position: absolute;
+          inset: 0;
           z-index: 2;
-          height: 100%;
           display: flex;
           align-items: center;
-          padding: 40px 9vw;
+          padding: 52px clamp(28px, 7vw, 110px);
+          background: transparent;
         }
-        .testimonial-copy { max-width: 680px; }
+        .testimonial-copy { max-width: min(470px, 44vw); }
         .testimonial-text {
           margin: 0 0 34px;
           color: white;
-          font: 400 40px/1.15 'Alevia DEMO', 'Judson', serif;
+          font: 400 clamp(28px, 3vw, 42px)/1.15 'Alevia DEMO', 'Judson', serif;
+          text-shadow: 0 3px 16px rgba(0,0,0,.34);
         }
         .testimonial-author {
           margin: 0;
           color: rgba(255,255,255,.73);
-          font: 400 40px 'Alevia DEMO', 'Judson', serif;
+          font: 400 clamp(24px, 2.5vw, 36px) 'Alevia DEMO', 'Judson', serif;
+          text-shadow: 0 3px 12px rgba(0,0,0,.35);
         }
         .dots {
           position: absolute;
           z-index: 3;
-          bottom: 20px;
-          left: 0; right: 0;
+          bottom: 24px;
+          left: 55%; right: 0;
           display: flex;
           justify-content: center;
-          gap: 12px;
+          gap: 16px;
         }
-        .dot { width: 13px; height: 13px; border-radius: 999px; border: 1px solid white; background: rgba(217,217,217,.46); padding: 0; }
+        .dot { width: 34px; height: 34px; border-radius: 999px; border: 1px solid white; background: rgba(217,217,217,.46); padding: 0; }
         .dot.active { background: #D9D9D9; }
         .testimonial-arrow {
           position: absolute;
@@ -683,6 +727,12 @@ export default function Home() {
         .testimonial-arrow-prev { left: 20px; }
         .testimonial-arrow-next { right: 20px; }
         @media (max-width: 560px) {
+          .testimonial { height: 520px; }
+          .testimonial img { position: absolute; inset: 0; width: 100%; height: 100%; }
+          .testimonial::after { inset: 0; background: linear-gradient(90deg, rgba(20,16,10,.76), rgba(20,16,10,.12)); }
+          .testimonial-content { padding: 30px 24px 75px; background: transparent; align-items: flex-end; }
+          .testimonial-copy { max-width: 680px; }
+          .dots { left: 0; }
           .testimonial-arrow { width: 38px; height: 38px; }
           .testimonial-arrow-prev { left: 12px; }
           .testimonial-arrow-next { right: 12px; }
@@ -708,45 +758,76 @@ export default function Home() {
         .territory-title { margin: -2px 0 6px; color: var(--juru-brown); font: 400 80px/.95 'Alevia DEMO', 'Judson', serif; }
         .territory-link { display: inline-flex; align-items: center; gap: 6px; color: var(--juru-brown); font: 400 20px 'Alevia DEMO', 'Judson', serif; text-decoration: none; transition: gap 300ms var(--ease-slide); }
         .territory-link:hover { gap: 12px; }
+
+        /* Cuadrícula de una sola celda: el mapa ocupa todo el ancho y el
+           panel beige (con borde curvo) se apila encima, a la izquierda. */
         .territory-grid {
           position: relative; z-index: 1;
-          max-width: 1190px;
+          max-width: 1320px;
           margin: 0 auto;
           display: grid;
-          grid-template-columns: 280px minmax(0, 1fr);
-          gap: 60px;
-          align-items: center;
+          grid-template-columns: 1fr;
+          align-items: stretch;
+          transform: none;
         }
-        .territory-data { color: var(--juru-brown); font: 400 20px/1.35 'Alevia DEMO', 'Judson', serif; }
-        .territory-illustration { display: block; object-fit: contain; }
-        .territory-illustration-house { width: 235px; max-width: 100%; margin: -5px auto 20px; opacity: .9; }
-        .territory-illustration-tools { width: 250px; max-width: 100%; margin: 12px auto 0; opacity: .9; }
-        .territory-quote { margin: 0 0 34px; max-width: 250px; }
-        .route-data { margin: 0 0 32px; }
-        .numbers { display: flex; gap: 28px; align-items: flex-start; margin: 10px 0 35px; }
-        .number { margin: 0; font: 400 100px/.78 'Alevia DEMO', 'Judson', serif; }
-        .number-label { margin: 12px 0 0; max-width: 110px; font: 400 20px/1.05 'Alevia DEMO', 'Judson', serif; }
+        .territory-grid > * { grid-area: 1 / 1; }
+
+        /* Mapa de fondo, a todo el ancho */
+        .territory-map-wrap { display: flex; border-radius: 50px; overflow: hidden; }
         .territory-map {
           position: relative;
-          min-height: 650px;
+          flex: 1;
+          min-height: 900px;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding-left: 0;
+          background-color: var(--juru-beige);
+          background-size: cover;
+          background-position: center;
+          background-blend-mode: multiply;
         }
-        .territory-map img {
-          width: min(100%, 850px);
-          max-height: 850px;
-          object-fit: contain;
-          filter: drop-shadow(0 30px 40px rgba(90,37,4,.08));
-          transition: transform 500ms var(--ease-slide);
+
+        /* Panel: el padding derecho mantiene el contenido lejos del borde curvo */
+        .territory-panel-wrap { width: min(54%, 620px); z-index: 2; }
+        .territory-data {
+          height: 100%;
+          padding: 88px 26% 88px 7%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 26px;
+          text-align: center;
+          background: var(--juru-beige);
+          border-radius: 50px 36% 36% 50px / 50px 50% 50% 50px;
+          color: var(--juru-brown);
+          font: 400 20px/1.35 'Alevia DEMO', 'Judson', serif;
         }
-        .territory-map:hover img { transform: scale(1.015); }
+        .territory-quote { margin: 0; font-size: 22px; }
+        .territory-quote strong { display: block; font-size: 28px; font-weight: 400; }
+        .route-data { margin: 0; font-size: 16px; line-height: 1.6; text-align: left; }
+
+        .territory-illustration { display: block; max-width: 100%; height: auto; object-fit: contain; opacity: .9; }
+        .territory-illustration-house { width: 235px; }
+        .territory-illustration-women { width: 220px; }
+        .territory-illustration-tools { width: 220px; }
+
+        .numbers { display: flex; gap: 36px; justify-content: center; }
+        .number { margin: 0; font: 400 72px/.9 'Alevia DEMO', 'Judson', serif; }
+        .number-plus { font-size: 18px; vertical-align: top; color: #000; }
+        .number-label { margin: 8px auto 0; max-width: 120px; font-size: 16px; line-height: 1.1; }
+        .territory-resguardo { margin: 0; font-size: 20px; }
+        .territory-resguardo strong { font-size: 28px; font-weight: 400; }
 
         .map-svg {
-          width: min(100%, 420px);
-          height: auto;
+          position: absolute;
+          z-index: 1;
+          top: 0;
+          right: 0;
+          width: min(46%, 570px);
+          height: 100%;
           display: block;
-          margin: 0 auto;
+          margin: 0;
           filter: drop-shadow(0 20px 30px rgba(90,37,4,.1));
         }
         .map-path {
@@ -778,32 +859,47 @@ export default function Home() {
 
         .map-detail-card {
           position: absolute;
-          top: 0;
-          right: 0;
-          width: 190px;
-          padding: 16px;
-          border-radius: 22px;
-          background: rgba(238,235,228,.92);
+          z-index: 4;
+          width: 160px;
+          max-width: calc(100% - 16px);
+          padding: 9px 10px 11px;
+          border: 1px solid rgba(90,37,4,.2);
+          border-radius: 4px;
+          background: rgba(247,242,228,.94);
           box-shadow: 0 18px 30px -12px rgba(90,37,4,.3);
           text-align: center;
+          animation: mapDetailIn 220ms var(--ease-slide) both;
+          pointer-events: none;
         }
+        @keyframes mapDetailIn { from { opacity: 0; } to { opacity: 1; } }
         .map-detail-num {
-          margin: 0 0 8px;
+          position: absolute;
+          top: 7px;
+          right: 8px;
+          z-index: 2;
+          min-width: 22px;
+          margin: 0;
+          padding-bottom: 3px;
+          border-bottom: 1px solid rgba(143,69,53,.55);
           color: var(--juru-red);
-          font: 400 22px 'Alevia DEMO', 'Judson', serif;
+          font: 400 22px/1 'Alevia DEMO', 'Judson', serif;
+          text-align: center;
         }
         .map-detail-card img {
           width: 100%;
-          height: 90px;
-          object-fit: cover;
-          border-radius: 14px;
+          height: 92px;
+          aspect-ratio: 4 / 3;
+          object-fit: contain;
+          background: var(--juru-paper);
+          border-radius: 2px;
           display: block;
+          object-position: center;
           margin-bottom: 10px;
         }
         .map-detail-text {
           margin: 0;
           color: var(--juru-brown);
-          font: 400 12px/1.4 'Instrument Sans', sans-serif;
+          font: 400 10px/1.3 'Instrument Sans', sans-serif;
         }
 
         .news {
@@ -929,16 +1025,18 @@ export default function Home() {
 
         @media (max-width: 900px) {
           .hero-links { display: none; }
+          .hero-club { display: none; }
           .mobile-menu-button { display: block; }
-          .who-layout { grid-template-columns: 1fr; gap: 20px; }
-          .who-art { max-width: 170px; }
-          .who-heading { text-align: center; }
-          .territory-grid { grid-template-columns: 1fr; }
-          .territory-data { max-width: 620px; margin: 0 auto; text-align: center; }
-          .territory-quote { margin-left: auto; margin-right: auto; }
-          .numbers { justify-content: center; }
-          .territory-map { min-height: 450px; }
-          .map-detail-card { position: static; width: 220px; margin: 0 auto 24px; }
+          /* Mapa: en pantallas chicas el panel pasa arriba y el mapa debajo */
+          .territory-grid > * { grid-area: auto; }
+          .territory-grid { transform: none; }
+          .territory-panel-wrap { width: 100%; }
+          .territory-data { padding: 48px 24px; border-radius: 50px; }
+          .territory-map { min-height: 450px; padding-left: 0; }
+          .map-svg { width: 100%; height: 100%; }
+
+          .map-detail-card { width: 150px; padding: 8px; }
+          .map-detail-card img { height: 78px; }
           .news-grid { grid-template-columns: 1fr; max-width: 520px; }
           .news-image-wrap { height: 560px; }
           .footer-top { grid-template-columns: 1fr; }
@@ -953,10 +1051,10 @@ export default function Home() {
           .hero-content { padding-bottom: 50px; }
           .hero-cta { min-width: 225px; font-size: 18px; }
           .intro { padding-top: 48px; }
-          .gallery-wrap { height: 270vh; }
-          .gallery-sticky { min-height: 570px; padding: 20px 13px 55px; }
+          .gallery-wrap { height: 110vh; padding-top: 36px; }
+          .gallery-sticky { top: 36px; height: calc(100vh - 36px); min-height: 570px; padding: 0 13px 55px; }
           .gallery-card { border-radius: 27px; }
-          .who { padding: 50px 24px 65px; }
+          .who { padding: 30px 24px 65px; }
           .who-copy { font-size: 15px; line-height: 1.42; }
           .who-slider { width: 220px; }
           .who-slide { height: 280px; }
@@ -967,7 +1065,7 @@ export default function Home() {
           .territory-kicker { font-size: 34px; }
           .territory-title { font-size: 51px; }
           .territory-map { min-height: 360px; }
-          .number { font-size: 66px; }
+          .number { font-size: 56px; }
           .news { padding: 55px 20px 75px; }
           .news-title { font-size: 40px; }
           .news-image-wrap { height: 470px; }
@@ -986,7 +1084,7 @@ export default function Home() {
       `}</style>
 
       <section className="hero" aria-label="Inicio">
-        <video className="hero-video" autoPlay muted loop playsInline src="/videos/hero.mp4" />
+        <video className="hero-video" autoPlay muted loop playsInline preload="auto" src="/videos/hero.mp4" />
         <div className="hero-shade" />
         <div className="hero-fade" />
 
@@ -1001,14 +1099,14 @@ export default function Home() {
             {NAV_LINKS_IZQ.map((item) => (
               <a key={item.label} href={item.href} className={navClass(item.href)} onClick={() => setActiveNav(item.href)}>{item.label}</a>
             ))}
-            <a href="#dona" className={navClass("#dona")} onClick={() => setActiveNav("#dona")}>Dona</a>
+            <Link to="/voces">Voces</Link>
             {NAV_LINKS_DER.map((item) => (
               <a key={item.label} href={item.href} className={navClass(item.href)} onClick={() => setActiveNav(item.href)}>{item.label}</a>
             ))}
-            <Link to="/voces">Voces</Link>
           </nav>
 
           <div className="hero-nav-spacer">
+            <a href="#dona" className="hero-club" onClick={() => setActiveNav("#dona")}>Club Creativo</a>
             <button className="mobile-menu-button" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
               <Menu size={27} />
             </button>
@@ -1036,7 +1134,7 @@ export default function Home() {
             {NAV_LINKS_IZQ.map((item) => (
               <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
             ))}
-            <a href="#dona" onClick={() => setMenuOpen(false)}>Dona</a>
+            <a href="#dona" onClick={() => setMenuOpen(false)}>Club Creativo</a>
             {NAV_LINKS_DER.map((item) => (
               <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
             ))}
@@ -1054,7 +1152,9 @@ export default function Home() {
         </Reveal>
       </section>
 
-      <section id="historia" ref={galleryWrapRef} className="gallery-wrap" aria-label="Nuestra historia">
+      <div className="story-visual">
+        <img className="story-texture" src={texturaQuienesSomos} alt="" aria-hidden="true" />
+        <section id="historia" ref={galleryWrapRef} className="gallery-wrap" aria-label="Nuestra historia">
         <div className="gallery-sticky">
           <div className="gallery-stack">
             {GALLERY.map((img, i) => (
@@ -1071,33 +1171,31 @@ export default function Home() {
                 <img src={img.src} alt={img.alt} />
               </div>
             ))}
-            <div className="gallery-fade" />
           </div>
         </div>
-      </section>
+        </section>
 
-      <section id="quienes-somos" className="who">
+        <section id="quienes-somos" className="who">
         <div className="who-inner">
           <Reveal>
             <h2 className="who-heading">¿ Quienes Somos ?</h2>
           </Reveal>
 
           <div className="who-layout">
-            <Reveal delay={100}>
-              <img src={ilustracionFamilia} alt="Ilustración de la comunidad de JURU" className="who-art" />
-            </Reveal>
             <Reveal delay={160}>
               <div className="who-copy">
-                <p>Somos artesanas, madres, trabajadoras del campo, mujeres que encontraron en sus manos una forma de crear, de sostenerse y de contar quiénes son. Con esas manos transformamos materiales en objetos que llevan parte de nuestra historia: bolsos, prendas, accesorios y piezas hechas con tiempo, dedicación y saber.</p>
-                <p>Pero JURU no habla solo de lo que hacemos. Habla de lo que somos y de dónde venimos. Por eso creamos este espacio: una ventana hacia nuestro territorio, para que puedas conocernos más allá de un producto.</p>
-                <p>Aquí puedes recorrer nuestros caminos en la Colección Digital del Entorno, escuchar nuestras voces e historias, adentrarte en nuestras memorias, y descubrir las piezas que hacemos en un catálogo pensado para una compra consciente. Cada uno de estos espacios cuenta una parte de nuestra historia.</p>
-                <p>Queremos que cuando conozcas una de nuestras piezas, conozcas también las manos que la hicieron, el territorio que la vio nacer y todo lo que hay detrás de ella. Porque para nosotras, crear no es solo hacer un objeto: es mantener vivo un saber, es contar nuestra historia, es darle valor a nuestro territorio, es seguir tejiendo memoria.</p>
-                <p>Te invitamos a recorrer JURU: a escucharnos, a conocernos. Y, si encuentras una pieza que quieras llevar contigo, a hacerlo sabiendo que detrás de ella hay una historia que sigue viva.<br />Bienvenida a nuestro territorio. Bienvenida a JURU.</p>
+                <p>Somos mujeres, artesanas, madres y trabajadoras del campo. Con nuestras manos creamos, sostenemos y contamos quiénes somos.</p>
+                <p>JURU nace de nuestro territorio, de nuestras historias y de los saberes que compartimos. Aquí puedes conocer nuestras voces, recorrer nuestros caminos, descubrir nuestras memorias y encontrar las piezas que hacemos con tiempo y dedicación.</p>
+                <p>Porque detrás de cada pieza hay mucho más que un objeto: hay unas manos, una historia y un territorio.</p>
+                <p>Te invitamos a recorrer JURU, conocernos y llevar contigo una parte de nuestra historia.</p>
+                <p>Bienvenida a nuestro territorio.</p>
+                <p className="who-welcome">¡Bienvenida a JURU!</p>
               </div>
             </Reveal>
           </div>
         </div>
-      </section>
+        </section>
+      </div>
 
       <section
         className="testimonial"
@@ -1109,8 +1207,8 @@ export default function Home() {
         <div className="testimonial-content">
           <Reveal>
             <div className="testimonial-copy">
-              <p className="testimonial-text">{TESTIMONIOS[0].texto}</p>
-              <p className="testimonial-author">{TESTIMONIOS[0].autora}</p>
+              <p className="testimonial-text">{TESTIMONIOS[faceIdx].texto}</p>
+              <p className="testimonial-author">{TESTIMONIOS[faceIdx].autora}</p>
             </div>
           </Reveal>
         </div>
@@ -1143,40 +1241,25 @@ export default function Home() {
         </div>
 
         <div className="territory-grid">
-          <Reveal>
-            <div className="territory-data">
-              <img className="territory-illustration territory-illustration-house" src={juruTerritorio} alt="Ilustración del territorio de JURU" />
-              <p className="territory-quote">La geografía no nos define, nos identifica.</p>
-              <p className="route-data"><strong>DST:</strong><br />1,4 km de recorrido<br /><br /><strong>DSN:</strong><br />+ 220 m<br /><br />40 min hasta la caseta</p>
-              <div className="numbers">
-                <div>
-                  <p className="number">30<span style={{ fontSize: 20, verticalAlign: "top" }}>+</span></p>
-                  <p className="number-label">familias</p>
-                </div>
-                <div>
-                  <p className="number">15<span style={{ fontSize: 20, verticalAlign: "top" }}>+</span></p>
-                  <p className="number-label">mujeres hacen parte de JURU</p>
-                </div>
-              </div>
-              <p>Somos parte del<br /><strong style={{ fontSize: 30 }}>resguardo indígena la Trina</strong></p>
-              <img className="territory-illustration territory-illustration-tools" src={juruHerramientas} alt="Herramientas artesanales de JURU" />
-            </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <div className="territory-map" id="mapa-imagen">
+          {/* Mapa: ocupa todo el ancho; el panel va encima, a la izquierda */}
+          <Reveal className="territory-map-wrap">
+            <div
+              className="territory-map"
+              id="mapa-imagen"
+              style={{ backgroundImage: `url(${mapaTerritorio})` }}
+              onMouseLeave={() => setHoverIdx(null)}
+            >
               <svg className="map-svg" viewBox="0 0 400 900" role="img" aria-label="Mapa interactivo del recorrido por el territorio de JURU">
-                <path d={routePath(TRONCO)} className="map-path" />
-                <path d={routePath(LAZO)} className="map-path" />
                 {RUTA.map((p, i) => {
                   if (p.isEnd) return null;
                   return (
                     <g
                       key={p.label + i}
                       className={`map-point ${p.isPin ? "is-pin" : ""} ${p.inactivo ? "is-inactive" : ""} ${hoverIdx === i ? "is-active" : ""}`}
-                      onMouseEnter={() => !p.inactivo && setHoverIdx(i)}
+                      onMouseEnter={() => !p.inactivo && p.detalle && setHoverIdx(i)}
+                      onMouseLeave={() => setHoverIdx(null)}
                       onFocus={() => !p.inactivo && setHoverIdx(i)}
-                      onClick={() => !p.inactivo && setHoverIdx(i)}
+                      onClick={() => !p.inactivo && p.detalle && setHoverIdx(i)}
                       tabIndex={p.inactivo ? -1 : 0}
                     >
                       <circle cx={p.x} cy={p.y} r={p.isPin ? 11 : 7} />
@@ -1187,12 +1270,55 @@ export default function Home() {
               </svg>
 
               {RUTA[hoverIdx]?.detalle && (
-                <div className="map-detail-card">
-                  <p className="map-detail-num">{RUTA[hoverIdx].label}</p>
+                <div
+                  className="map-detail-card"
+                  style={{
+                    left: `${Math.min(Math.max(54 + (RUTA[hoverIdx].x / 400) * 46 + (RUTA[hoverIdx].x > 250 ? -4 : 4), 30), 84)}%`,
+                    top: `${Math.min(Math.max((RUTA[hoverIdx].y / 900) * 100, 16), 84)}%`,
+                    transform: RUTA[hoverIdx].x > 250 ? "translate(-100%, -50%)" : "translate(0, -50%)",
+                  }}
+                >
                   <img src={GALLERY[RUTA[hoverIdx].detalle.img].src} alt={RUTA[hoverIdx].detalle.titulo} />
                   <p className="map-detail-text">{RUTA[hoverIdx].detalle.texto}</p>
+                  <p className="map-detail-num">{RUTA[hoverIdx].label}</p>
                 </div>
               )}
+            </div>
+          </Reveal>
+
+          {/* Panel beige con borde curvo */}
+          <Reveal className="territory-panel-wrap" delay={120}>
+            <div className="territory-data">
+              <p className="territory-quote">
+                La geografía no nos define<br /><strong>nos identifica.</strong>
+              </p>
+
+              <img className="territory-illustration territory-illustration-house" src={juruTerritorio} alt="Ilustración del territorio de JURU" />
+
+              <p className="route-data">
+                <strong>DST:</strong> 1,4 km de recorrido<br />
+                <strong>DSN:</strong> + 220 m<br />
+                <strong>t:</strong> 40 min hasta la caseta
+              </p>
+
+              <img className="territory-illustration territory-illustration-women" src={ilustracionSeñoras} alt="Tres mujeres tejiendo" />
+
+              <div className="numbers">
+                <div>
+                  <p className="number">30<span className="number-plus">+</span></p>
+                  <p className="number-label">familias</p>
+                </div>
+                <div>
+                  <p className="number">15<span className="number-plus">+</span></p>
+                  <p className="number-label">mujeres hacen parte de JURU</p>
+                </div>
+              </div>
+
+              <img className="territory-illustration territory-illustration-tools" src={juruHerramientas} alt="Herramientas artesanales de JURU" />
+
+              <p className="territory-resguardo">
+                Somos parte del<br /><strong>resguardo indígena la Trina</strong>
+              </p>
             </div>
           </Reveal>
         </div>

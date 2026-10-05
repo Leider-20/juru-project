@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Play, Pause, MapPin, Clock, Mic, Square, Trash2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import juruLogo from './images/juru-logo.jpeg'
 
 // ---------------------------------------------------------------------------
@@ -540,6 +542,18 @@ export default function JuruPrototype() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         @keyframes juruPulse { 0% { box-shadow: 0 0 0 0 rgba(193,80,46,0.55); } 100% { box-shadow: 0 0 0 14px rgba(193,80,46,0); } }
+        @keyframes vocesCanvasIn { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
+        @keyframes vocesAsideIn { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes vocesFloatIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes vocesBackButtonIn { from { opacity: 0; transform: translateX(16px) scale(.88); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        .voces-canvas { animation: vocesCanvasIn 800ms cubic-bezier(.22,1,.36,1) both; }
+        .voces-aside { animation: vocesAsideIn 650ms cubic-bezier(.22,1,.36,1) 100ms both; }
+        .voces-header { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 260ms both; }
+        .voces-controls { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 420ms both; }
+        .voces-back-button { animation: vocesBackButtonIn 500ms cubic-bezier(.22,1,.36,1) 350ms both; }
+        @media (prefers-reduced-motion: reduce) {
+          .voces-canvas, .voces-aside, .voces-header, .voces-controls, .voces-back-button { animation: none; }
+        }
       `}</style>
 
       <audio
@@ -549,7 +563,7 @@ export default function JuruPrototype() {
         onEnded={() => setPlaying(false)}
       />
 
-      <aside className="md:w-56 shrink-0 md:self-start overflow-y-auto px-6 pt-4 pb-8 border-b md:border-r" style={{ borderColor: "#26221B" }}>
+      <aside className="voces-aside md:w-56 shrink-0 md:self-start overflow-y-auto px-6 pt-4 pb-8 border-b md:border-r" style={{ borderColor: "#26221B" }}>
         <img src={juruLogo} alt="JURU" className="h-18 w-auto mb-1 mx-auto block" />
         <div className="italic text-sm text-center mb-8" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
           Dejando huella
@@ -613,8 +627,8 @@ export default function JuruPrototype() {
         </nav>
       </aside>
 
-      <main className="relative flex-1 min-h-0 overflow-hidden" onClick={handleCanvasClick}>
-        <div className="absolute top-0 left-0 right-0 px-6 py-4 z-10" style={{ background: "linear-gradient(180deg, rgba(18,16,13,0.85) 0%, rgba(18,16,13,0) 100%)" }}>
+      <main className="voces-canvas relative flex-1 min-h-0 overflow-hidden" onClick={handleCanvasClick}>
+        <div className="voces-header absolute top-0 left-0 right-0 px-6 py-4 z-10" style={{ background: "linear-gradient(180deg, rgba(18,16,13,0.85) 0%, rgba(18,16,13,0) 100%)" }}>
           <div style={{ opacity: sectionVisible ? 1 : 0, transition: `opacity ${SECTION_FADE_MS}ms ease` }}>
             <div className="flex items-center gap-2 text-sm font-medium" style={{ color: "#EDE6D8" }}>
               <span className="inline-block rounded-full" style={{ width: 8, height: 8, background: seccion.color }} />
@@ -657,7 +671,7 @@ export default function JuruPrototype() {
 
         {activeSection !== TODOS_ID ? (
           <div
-            className="absolute bottom-56 right-4 md:bottom-8 md:right-6 flex flex-col items-end gap-2 z-20"
+            className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 flex flex-col items-end gap-2 z-20"
             onClick={(e) => e.stopPropagation()}
           >
             {micError && (
@@ -680,16 +694,38 @@ export default function JuruPrototype() {
             </button>
           </div>
         ) : (
-          <div className="absolute bottom-56 right-4 md:bottom-8 md:right-6 z-20 max-w-[220px] text-right">
+          <div className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 z-20 max-w-[220px] text-right">
             <div className="text-xs px-3 py-1.5 rounded-lg" style={{ background: "#1C1914", color: "#8A7C63", border: "1px solid #33291F" }}>
               Elige una sección para grabar un nuevo relato.
             </div>
           </div>
         )}
 
-        <div className="hidden md:block absolute top-6 right-6 text-xs text-right z-10" style={{ color: "#5C5346", fontFamily: "'IBM Plex Mono', monospace" }}>
-          Toca una rama para escuchar ese relato
-        </div>
+        <Link
+          to="/"
+          className="voces-back-button absolute top-4 right-4 md:top-6 md:right-6 z-10 inline-flex items-center justify-center rounded-full w-9 h-9 md:w-10 md:h-10"
+          style={{
+            color: "#EDE6D8",
+            background: "rgba(28,25,20,.78)",
+            border: "1px solid #5C5346",
+            transition: "background .25s ease, transform .25s ease, border-color .25s ease",
+          }}
+          aria-label="Volver al inicio"
+          title="Volver al inicio"
+          onClick={(event) => event.stopPropagation()}
+          onMouseEnter={(event) => {
+            event.currentTarget.style.background = "#C1502E";
+            event.currentTarget.style.borderColor = "#C1502E";
+            event.currentTarget.style.transform = "translateX(-2px)";
+          }}
+          onMouseLeave={(event) => {
+            event.currentTarget.style.background = "rgba(28,25,20,.78)";
+            event.currentTarget.style.borderColor = "#5C5346";
+            event.currentTarget.style.transform = "translateX(0)";
+          }}
+        >
+          <ArrowLeft size={17} />
+        </Link>
       </main>
 
       {active ? (
