@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Play, Pause, MapPin, Clock, Mic, Square, Trash2 } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+import { Play, Pause, MapPin, Clock, Mic, Square, Trash2, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import juruLogo from './images/juru-logo.jpeg'
+import juruLogo from "./images/juru-logo.png";
 
 // ---------------------------------------------------------------------------
 // JURU — proyecto propio inspirado en la idea de un "quipu" (hilos con
@@ -13,6 +12,12 @@ import juruLogo from './images/juru-logo.jpeg'
 // Las grabaciones reales las agrega la propia persona con el micrófono,
 // y sí usan su audio y duración reales.
 // ---------------------------------------------------------------------------
+
+// Barra de navegación (misma del Home). Los enlaces con ancla van como <a>
+// con "/#..." para que, al venir desde otra página, el navegador cargue el
+// Home y se desplace hasta la sección.
+const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
+const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
 
 // Aclara u oscurece un color hexadecimal. percent > 0 aclara, < 0 oscurece.
 function shade(hex, percent) {
@@ -321,6 +326,7 @@ function Cord({ hilo, isActive, onSelect }) {
 }
 
 export default function JuruPrototype() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("mi-vida");
 
   const [displaySection, setDisplaySection] = useState(activeSection);
@@ -536,23 +542,113 @@ export default function JuruPrototype() {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden flex flex-col md:flex-row"
+      className="relative w-full h-screen overflow-hidden flex flex-col"
       style={{ background: "#12100D", color: "#EDE6D8", fontFamily: "'Inter', sans-serif" }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fredoka:wght@400;500&family=Judson:wght@400&display=swap');
+        :root {
+          --ease-figma: cubic-bezier(0.42, 0, 1, 1);
+          --ease-slide: cubic-bezier(0, 0, 0.58, 1);
+        }
         @keyframes juruPulse { 0% { box-shadow: 0 0 0 0 rgba(193,80,46,0.55); } 100% { box-shadow: 0 0 0 14px rgba(193,80,46,0); } }
         @keyframes vocesCanvasIn { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
         @keyframes vocesAsideIn { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes vocesFloatIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes vocesBackButtonIn { from { opacity: 0; transform: translateX(16px) scale(.88); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes vocesNavIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes vnMenuIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .voces-canvas { animation: vocesCanvasIn 800ms cubic-bezier(.22,1,.36,1) both; }
         .voces-aside { animation: vocesAsideIn 650ms cubic-bezier(.22,1,.36,1) 100ms both; }
         .voces-header { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 260ms both; }
         .voces-controls { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 420ms both; }
-        .voces-back-button { animation: vocesBackButtonIn 500ms cubic-bezier(.22,1,.36,1) 350ms both; }
+        .voces-nav { animation: vocesNavIn 500ms cubic-bezier(.22,1,.36,1) both; }
         @media (prefers-reduced-motion: reduce) {
-          .voces-canvas, .voces-aside, .voces-header, .voces-controls, .voces-back-button { animation: none; }
+          .voces-canvas, .voces-aside, .voces-header, .voces-controls, .voces-nav { animation: none; }
+        }
+
+        /* ---------- Barra de navegación (misma del Home) ---------- */
+        .vn-bar {
+          position: relative;
+          z-index: 40;
+          flex-shrink: 0;
+          height: 70px;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          padding: 0 4.5vw;
+          background: rgba(59,59,59,.28);
+          border-bottom: 1px solid #26221B;
+          backdrop-filter: blur(2px);
+        }
+        .vn-logo-wrap { justify-self: start; }
+        .vn-logo { width: 86px; height: auto; display: block; }
+        .vn-right { justify-self: end; display: flex; align-items: center; }
+        .vn-links {
+          justify-self: center;
+          display: flex;
+          align-items: center;
+          gap: 34px;
+          color: rgba(255,255,255,.92);
+          font: 500 14px 'Fredoka', sans-serif;
+        }
+        .vn-links a {
+          position: relative;
+          text-decoration: none;
+          color: inherit;
+          transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide);
+        }
+        .vn-links a::after {
+          content: '';
+          position: absolute;
+          left: 0; bottom: -7px;
+          width: 100%; height: 1px;
+          background: rgba(255,255,255,.8);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 300ms var(--ease-slide);
+        }
+        .vn-links a:hover { opacity: .75; transform: translateY(-1px); }
+        .vn-links a:hover::after { transform: scaleX(1); }
+        .vn-links a.vn-active {
+          padding: 9px 22px;
+          background: rgba(217,217,217,.46);
+          border-radius: 999px;
+        }
+        .vn-links a.vn-active::after { display: none; }
+        .vn-club {
+          padding: 9px 22px;
+          border-radius: 999px;
+          background: #d3da63;
+          color: #272626;
+          text-decoration: none;
+          font: 400 14px 'Fredoka', sans-serif;
+          white-space: nowrap;
+          transition: filter 300ms var(--ease-slide), transform 300ms var(--ease-slide);
+        }
+        .vn-club:hover { filter: brightness(1.05); transform: translateY(-1px); }
+        .vn-menu-btn { display: none; border: 0; background: transparent; color: white; cursor: pointer; }
+
+        .vn-overlay {
+          position: fixed; inset: 0; z-index: 60;
+          background: #1F1B14; color: white;
+          display: flex; flex-direction: column;
+          animation: vnMenuIn 300ms var(--ease-slide) both;
+        }
+        .vn-overlay-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; }
+        .vn-overlay nav {
+          flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          gap: 28px; font: 400 28px 'Judson', serif;
+        }
+        .vn-overlay nav a { text-decoration: none; color: inherit; transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide); }
+        .vn-overlay nav a:hover { opacity: .65; transform: translateX(5px); }
+
+        @media (max-width: 900px) {
+          .vn-links, .vn-club { display: none; }
+          .vn-menu-btn { display: block; }
+        }
+        @media (max-width: 560px) {
+          .vn-bar { padding: 0 20px; }
+          .vn-logo { width: 74px; }
         }
       `}</style>
 
@@ -563,255 +659,288 @@ export default function JuruPrototype() {
         onEnded={() => setPlaying(false)}
       />
 
-      <aside className="voces-aside md:w-56 shrink-0 md:self-start overflow-y-auto px-6 pt-4 pb-8 border-b md:border-r" style={{ borderColor: "#26221B" }}>
-        <img src={juruLogo} alt="JURU" className="h-18 w-auto mb-1 mx-auto block" />
-        <div className="italic text-sm text-center mb-8" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
-          Dejando huella
+      {/* ------------------- Barra de navegación ------------------- */}
+      <header className="vn-bar voces-nav">
+        <div className="vn-logo-wrap">
+          <Link to="/" aria-label="JURU inicio">
+            <img className="vn-logo" src={juruLogo} alt="JURU" />
+          </Link>
         </div>
-        <nav className="flex flex-col gap-3 text-sm">
-          {SECCIONES.map((s) => {
-            const isActive = s.id === activeSection;
-            const count = (recordings[s.id] || []).length;
-            return (
-              <div
-                key={s.id}
-                onClick={() => setActiveSection(s.id)}
-                className="flex items-center gap-2 cursor-pointer select-none"
-                style={{ color: isActive ? "#EDE6D8" : "#8A7C63", transition: "color 0.25s ease" }}
-                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#B5A88F"; }}
-                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#8A7C63"; }}
-              >
-                <span
-                  className="inline-block rounded-full shrink-0"
-                  style={{ width: 6, height: 6, background: s.color, opacity: isActive ? 1 : 0.4, transition: "opacity 0.25s ease" }}
-                />
-                {s.label}
-                {count > 0 && (
-                  <span className="text-xs" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
-                    · {count}
-                  </span>
-                )}
-              </div>
-            );
-          })}
 
-          <div className="mt-1 pt-3 border-t" style={{ borderColor: "#26221B" }}>
-            <div
-              onClick={() => setActiveSection(TODOS_ID)}
-              className="flex items-center gap-2 cursor-pointer select-none font-medium"
-              style={{
-                color: activeSection === TODOS_ID ? "#EDE6D8" : "#8A7C63",
-                transition: "color 0.25s ease",
-              }}
-              onMouseEnter={(e) => { if (activeSection !== TODOS_ID) e.currentTarget.style.color = "#B5A88F"; }}
-              onMouseLeave={(e) => { if (activeSection !== TODOS_ID) e.currentTarget.style.color = "#8A7C63"; }}
-            >
-              <span
-                className="inline-block rounded-full shrink-0"
-                style={{
-                  width: 6,
-                  height: 6,
-                  background: SECCION_TODOS.color,
-                  opacity: activeSection === TODOS_ID ? 1 : 0.4,
-                  transition: "opacity 0.25s ease",
-                }}
-              />
-              {SECCION_TODOS.label}
-              {totalCount > 0 && (
-                <span className="text-xs font-normal" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
-                  · {totalCount}
-                </span>
-              )}
-            </div>
-          </div>
+        <nav className="vn-links" aria-label="Navegación principal">
+          {NAV_LINKS_IZQ.map((item) => (
+            <a key={item.label} href={item.href}>{item.label}</a>
+          ))}
+          <Link to="/vive">Vive</Link>
+          <Link to="/voces" className="vn-active" aria-current="page">Voces</Link>
+          {NAV_LINKS_DER.map((item) => (
+            <a key={item.label} href={item.href}>{item.label}</a>
+          ))}
         </nav>
-      </aside>
 
-      <main className="voces-canvas relative flex-1 min-h-0 overflow-hidden" onClick={handleCanvasClick}>
-        <div className="voces-header absolute top-0 left-0 right-0 px-6 py-4 z-10" style={{ background: "linear-gradient(180deg, rgba(18,16,13,0.85) 0%, rgba(18,16,13,0) 100%)" }}>
-          <div style={{ opacity: sectionVisible ? 1 : 0, transition: `opacity ${SECTION_FADE_MS}ms ease` }}>
-            <div className="flex items-center gap-2 text-sm font-medium" style={{ color: "#EDE6D8" }}>
-              <span className="inline-block rounded-full" style={{ width: 8, height: 8, background: seccion.color }} />
-              {seccion.label}
-            </div>
-            {seccion.keywords && (
-              <div
-                className="text-[11px] mt-0.5 uppercase tracking-wide"
-                style={{ color: seccion.color, fontFamily: "'IBM Plex Mono', monospace", opacity: 0.85 }}
-              >
-                {seccion.keywords}
-              </div>
-            )}
-            <div className="text-xs mt-0.5 max-w-md" style={{ color: "#8A7C63" }}>
-              {seccion.desc}
-            </div>
-          </div>
+        <div className="vn-right">
+          <Link to="/clubCreativo" className="vn-club">Club Creativo</Link>
+          <button className="vn-menu-btn" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
+            <Menu size={27} />
+          </button>
         </div>
+      </header>
 
-        <svg
-          viewBox="0 0 960 660"
-          preserveAspectRatio="xMidYMid meet"
-          className="absolute inset-0 w-full h-full"
-        >
-          <path
-            d={`M ${TRUNK_START[0]} ${TRUNK_START[1]} C ${TRUNK_START[0] - 20} ${TRUNK_START[1] - 90} ${FORK[0] - 10} ${FORK[1] + 70} ${FORK[0]} ${FORK[1]}`}
-            fill="none"
-            stroke={seccion.color}
-            strokeOpacity={0.55}
-            strokeWidth={2.4}
-            strokeLinecap="round"
-            style={{ transition: "stroke 0.4s ease" }}
-          />
-          <g style={{ opacity: sectionVisible ? 1 : 0, transition: `opacity ${SECTION_FADE_MS}ms ease` }}>
-            {hilos.map((h) => (
-              <Cord key={h.id} hilo={h} isActive={h.id === activeId} onSelect={setActiveId} />
+      {menuOpen && (
+        <div className="vn-overlay">
+          <div className="vn-overlay-head">
+            <img src={juruLogo} alt="JURU" className="vn-logo" />
+            <button className="vn-menu-btn" style={{ display: "block" }} onClick={() => setMenuOpen(false)} aria-label="Cerrar menú">
+              <X size={28} />
+            </button>
+          </div>
+          <nav>
+            {NAV_LINKS_IZQ.map((item) => (
+              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
             ))}
-          </g>
-        </svg>
+            <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
+            <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
+            {NAV_LINKS_DER.map((item) => (
+              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+            ))}
+            <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
+          </nav>
+        </div>
+      )}
 
-        {activeSection !== TODOS_ID ? (
-          <div
-            className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 flex flex-col items-end gap-2 z-20"
-            onClick={(e) => e.stopPropagation()}
+      {/* ------------------- Contenido (debajo de la barra) ------------------- */}
+      <div className="relative flex-1 min-h-0 flex flex-col md:flex-row">
+        {/* Columna izquierda: menú de secciones + panel de relato.
+            En escritorio el panel va justo debajo del menú; en móvil el
+            wrapper no es "relative", así el panel se ancla al fondo. */}
+        <div className="static md:relative md:w-56 shrink-0 md:self-start">
+          <aside
+            className="voces-aside w-full overflow-y-auto px-6 pt-6 pb-8 border-b md:border-r"
+            style={{ borderColor: "#26221B" }}
           >
-            {micError && (
-              <div className="text-xs px-3 py-1.5 rounded-lg max-w-[220px] text-right" style={{ background: "#33291F", color: "#D98C6E" }}>
-                {micError}
-              </div>
-            )}
-            <button
-              onClick={isRecording ? stopRecording : startRecording}
-              className="flex items-center gap-2 rounded-full px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-medium whitespace-nowrap"
-              style={{
-                background: isRecording ? "#C1502E" : "#1C1914",
-                color: isRecording ? "#EDE6D8" : "#EDE6D8",
-                border: `1px solid ${isRecording ? "#C1502E" : "#33291F"}`,
-                animation: isRecording ? "juruPulse 1.5s infinite" : "none",
-              }}
-            >
-              {isRecording ? <Square size={14} /> : <Mic size={14} />}
-              {isRecording ? `Grabando · ${fmt(recordSeconds)}` : "Grabar un nuevo relato"}
-            </button>
-          </div>
-        ) : (
-          <div className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 z-20 max-w-[220px] text-right">
-            <div className="text-xs px-3 py-1.5 rounded-lg" style={{ background: "#1C1914", color: "#8A7C63", border: "1px solid #33291F" }}>
-              Elige una sección para grabar un nuevo relato.
+            <div className="italic text-sm text-center mb-6" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
+              Dejando huella
             </div>
-          </div>
-        )}
-
-        <Link
-          to="/"
-          className="voces-back-button absolute top-4 right-4 md:top-6 md:right-6 z-10 inline-flex items-center justify-center rounded-full w-9 h-9 md:w-10 md:h-10"
-          style={{
-            color: "#EDE6D8",
-            background: "rgba(28,25,20,.78)",
-            border: "1px solid #5C5346",
-            transition: "background .25s ease, transform .25s ease, border-color .25s ease",
-          }}
-          aria-label="Volver al inicio"
-          title="Volver al inicio"
-          onClick={(event) => event.stopPropagation()}
-          onMouseEnter={(event) => {
-            event.currentTarget.style.background = "#C1502E";
-            event.currentTarget.style.borderColor = "#C1502E";
-            event.currentTarget.style.transform = "translateX(-2px)";
-          }}
-          onMouseLeave={(event) => {
-            event.currentTarget.style.background = "rgba(28,25,20,.78)";
-            event.currentTarget.style.borderColor = "#5C5346";
-            event.currentTarget.style.transform = "translateX(0)";
-          }}
-        >
-          <ArrowLeft size={17} />
-        </Link>
-      </main>
-
-      {active ? (
-        <div
-          className="absolute left-4 right-4 md:left-4 md:right-auto md:w-[440px] bottom-8 md:bottom-auto md:top-96 rounded-xl px-4 py-4 md:px-6 md:py-5 md:max-h-[calc(100vh-18rem)] md:overflow-y-auto z-30"
-          style={{ background: "rgba(28,25,20,0.92)", border: "1px solid #33291F", backdropFilter: "blur(6px)" }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-            <div className="flex items-center gap-2 text-[11px] md:text-xs" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
-              <MapPin size={12} /> {active.place}
-              <span className="mx-1">·</span>
-              <Clock size={12} /> {active.recordedLabel}
-            </div>
-            <button onClick={deleteActiveRecording} style={{ color: "#8A7C63" }} title="Borrar grabación">
-              <Trash2 size={13} />
-            </button>
-          </div>
-
-          <div className="italic text-base md:text-xl mb-4 md:mb-5 leading-snug" style={{ fontFamily: "'Fraunces', serif", color: "#EDE6D8" }}>
-            Grabación anónima — toca reproducir para escucharla.
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={togglePlay}
-              className="rounded-full flex items-center justify-center shrink-0 w-9 h-9 md:w-10 md:h-10"
-              style={{ background: active.color, color: "#12100D" }}
-            >
-              {playing ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: 2 }} />}
-            </button>
-
-            <div className="flex-1">
-              <div className="relative h-1.5 rounded-full" style={{ background: "#33291F" }}>
-                <div
-                  className="absolute left-0 top-0 h-1.5 rounded-full"
-                  style={{ width: `${Math.min(100, (progress / active.duration) * 100)}%`, background: active.color, transition: "width 0.2s linear" }}
-                />
-                {Array.from({ length: active.knots }).map((_, i) => (
+            <nav className="flex flex-col gap-3 text-sm">
+              {SECCIONES.map((s) => {
+                const isActive = s.id === activeSection;
+                const count = (recordings[s.id] || []).length;
+                return (
                   <div
-                    key={i}
-                    className="absolute rounded-full"
+                    key={s.id}
+                    onClick={() => setActiveSection(s.id)}
+                    className="flex items-center gap-2 cursor-pointer select-none"
+                    style={{ color: isActive ? "#EDE6D8" : "#8A7C63", transition: "color 0.25s ease" }}
+                    onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#B5A88F"; }}
+                    onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#8A7C63"; }}
+                  >
+                    <span
+                      className="inline-block rounded-full shrink-0"
+                      style={{ width: 6, height: 6, background: s.color, opacity: isActive ? 1 : 0.4, transition: "opacity 0.25s ease" }}
+                    />
+                    {s.label}
+                    {count > 0 && (
+                      <span className="text-xs" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
+                        · {count}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+
+              <div className="mt-1 pt-3 border-t" style={{ borderColor: "#26221B" }}>
+                <div
+                  onClick={() => setActiveSection(TODOS_ID)}
+                  className="flex items-center gap-2 cursor-pointer select-none font-medium"
+                  style={{
+                    color: activeSection === TODOS_ID ? "#EDE6D8" : "#8A7C63",
+                    transition: "color 0.25s ease",
+                  }}
+                  onMouseEnter={(e) => { if (activeSection !== TODOS_ID) e.currentTarget.style.color = "#B5A88F"; }}
+                  onMouseLeave={(e) => { if (activeSection !== TODOS_ID) e.currentTarget.style.color = "#8A7C63"; }}
+                >
+                  <span
+                    className="inline-block rounded-full shrink-0"
                     style={{
-                      left: `${((i + 1) / (active.knots + 1)) * 100}%`,
-                      top: -1.5, width: 4.5, height: 4.5, background: "#8A7C63",
+                      width: 6,
+                      height: 6,
+                      background: SECCION_TODOS.color,
+                      opacity: activeSection === TODOS_ID ? 1 : 0.4,
+                      transition: "opacity 0.25s ease",
                     }}
                   />
-                ))}
+                  {SECCION_TODOS.label}
+                  {totalCount > 0 && (
+                    <span className="text-xs font-normal" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
+                      · {totalCount}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="flex justify-between text-xs mt-1.5" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
-                <span>{fmt(progress)}</span>
-                <span>{fmt(active.duration)}</span>
+            </nav>
+          </aside>
+
+          {active ? (
+            <div
+              className="absolute left-4 right-4 bottom-8 md:left-4 md:right-auto md:bottom-auto md:top-full md:mt-4 md:w-[440px] rounded-xl px-4 py-4 md:px-6 md:py-5 md:max-h-[calc(100vh-340px)] md:overflow-y-auto z-30"
+              style={{ background: "rgba(28,25,20,0.92)", border: "1px solid #33291F", backdropFilter: "blur(6px)" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                <div className="flex items-center gap-2 text-[11px] md:text-xs" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <MapPin size={12} /> {active.place}
+                  <span className="mx-1">·</span>
+                  <Clock size={12} /> {active.recordedLabel}
+                </div>
+                <button onClick={deleteActiveRecording} style={{ color: "#8A7C63" }} title="Borrar grabación">
+                  <Trash2 size={13} />
+                </button>
+              </div>
+
+              <div className="italic text-base md:text-xl mb-4 md:mb-5 leading-snug" style={{ fontFamily: "'Fraunces', serif", color: "#EDE6D8" }}>
+                Grabación anónima — toca reproducir para escucharla.
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={togglePlay}
+                  className="rounded-full flex items-center justify-center shrink-0 w-9 h-9 md:w-10 md:h-10"
+                  style={{ background: active.color, color: "#12100D" }}
+                >
+                  {playing ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: 2 }} />}
+                </button>
+
+                <div className="flex-1">
+                  <div className="relative h-1.5 rounded-full" style={{ background: "#33291F" }}>
+                    <div
+                      className="absolute left-0 top-0 h-1.5 rounded-full"
+                      style={{ width: `${Math.min(100, (progress / active.duration) * 100)}%`, background: active.color, transition: "width 0.2s linear" }}
+                    />
+                    {Array.from({ length: active.knots }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full"
+                        style={{
+                          left: `${((i + 1) / (active.knots + 1)) * 100}%`,
+                          top: -1.5, width: 4.5, height: 4.5, background: "#8A7C63",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex justify-between text-xs mt-1.5" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <span>{fmt(progress)}</span>
+                    <span>{fmt(active.duration)}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      ) : (
-        <div
-          className="absolute left-4 right-4 md:left-4 md:right-auto md:w-[380px] bottom-8 md:bottom-auto md:top-85 rounded-xl px-4 py-4 md:px-6 md:py-5 z-30"
-          style={{ background: "rgba(28,25,20,0.75)", border: "1px dashed #33291F" }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="text-sm" style={{ color: "#8A7C63" }}>
-            {hilos.length > 0
-              ? "Toca una rama para escuchar ese relato."
-              : "Todavía no hay relatos. Graba tu primer relato con el botón de abajo."}
-          </div>
-          {targetSeccion.questions && targetSeccion.questions.length > 0 && (
-            <div className="mt-3 pt-3 border-t" style={{ borderColor: "#33291F" }}>
-              <div
-                className="text-[10px] uppercase tracking-wide mb-2"
-                style={{ color: targetSeccion.color, fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                Preguntas para inspirarte
+          ) : (
+            <div
+              className="absolute left-4 right-4 bottom-8 md:left-4 md:right-auto md:bottom-auto md:top-full md:mt-4 md:w-[380px] rounded-xl px-4 py-4 md:px-6 md:py-5 md:max-h-[calc(100vh-340px)] md:overflow-y-auto z-30"
+              style={{ background: "rgba(28,25,20,0.75)", border: "1px dashed #33291F" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-sm" style={{ color: "#8A7C63" }}>
+                {hilos.length > 0
+                  ? "Toca una rama para escuchar ese relato."
+                  : "Todavía no hay relatos. Graba tu primer relato con el botón de abajo."}
               </div>
-              <ul className="flex flex-col gap-1.5 text-xs" style={{ color: "#B5A88F" }}>
-                {targetSeccion.questions.map((q, i) => (
-                  <li key={i} className="leading-snug">
-                    {q}
-                  </li>
-                ))}
-              </ul>
+              {targetSeccion.questions && targetSeccion.questions.length > 0 && (
+                <div className="mt-3 pt-3 border-t" style={{ borderColor: "#33291F" }}>
+                  <div
+                    className="text-[10px] uppercase tracking-wide mb-2"
+                    style={{ color: targetSeccion.color, fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    Preguntas para inspirarte
+                  </div>
+                  <ul className="flex flex-col gap-1.5 text-xs" style={{ color: "#B5A88F" }}>
+                    {targetSeccion.questions.map((q, i) => (
+                      <li key={i} className="leading-snug">
+                        {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+
+        <main className="voces-canvas relative flex-1 min-h-0 overflow-hidden" onClick={handleCanvasClick}>
+          <div className="voces-header absolute top-0 left-0 right-0 px-6 py-4 z-10" style={{ background: "linear-gradient(180deg, rgba(18,16,13,0.85) 0%, rgba(18,16,13,0) 100%)" }}>
+            <div style={{ opacity: sectionVisible ? 1 : 0, transition: `opacity ${SECTION_FADE_MS}ms ease` }}>
+              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: "#EDE6D8" }}>
+                <span className="inline-block rounded-full" style={{ width: 8, height: 8, background: seccion.color }} />
+                {seccion.label}
+              </div>
+              {seccion.keywords && (
+                <div
+                  className="text-[11px] mt-0.5 uppercase tracking-wide"
+                  style={{ color: seccion.color, fontFamily: "'IBM Plex Mono', monospace", opacity: 0.85 }}
+                >
+                  {seccion.keywords}
+                </div>
+              )}
+              <div className="text-xs mt-0.5 max-w-md" style={{ color: "#8A7C63" }}>
+                {seccion.desc}
+              </div>
+            </div>
+          </div>
+
+          <svg
+            viewBox="0 0 960 660"
+            preserveAspectRatio="xMidYMid meet"
+            className="absolute inset-0 w-full h-full"
+          >
+            <path
+              d={`M ${TRUNK_START[0]} ${TRUNK_START[1]} C ${TRUNK_START[0] - 20} ${TRUNK_START[1] - 90} ${FORK[0] - 10} ${FORK[1] + 70} ${FORK[0]} ${FORK[1]}`}
+              fill="none"
+              stroke={seccion.color}
+              strokeOpacity={0.55}
+              strokeWidth={2.4}
+              strokeLinecap="round"
+              style={{ transition: "stroke 0.4s ease" }}
+            />
+            <g style={{ opacity: sectionVisible ? 1 : 0, transition: `opacity ${SECTION_FADE_MS}ms ease` }}>
+              {hilos.map((h) => (
+                <Cord key={h.id} hilo={h} isActive={h.id === activeId} onSelect={setActiveId} />
+              ))}
+            </g>
+          </svg>
+
+          {activeSection !== TODOS_ID ? (
+            <div
+              className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 flex flex-col items-end gap-2 z-20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {micError && (
+                <div className="text-xs px-3 py-1.5 rounded-lg max-w-[220px] text-right" style={{ background: "#33291F", color: "#D98C6E" }}>
+                  {micError}
+                </div>
+              )}
+              <button
+                onClick={isRecording ? stopRecording : startRecording}
+                className="flex items-center gap-2 rounded-full px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-medium whitespace-nowrap"
+                style={{
+                  background: isRecording ? "#C1502E" : "#1C1914",
+                  color: isRecording ? "#EDE6D8" : "#EDE6D8",
+                  border: `1px solid ${isRecording ? "#C1502E" : "#33291F"}`,
+                  animation: isRecording ? "juruPulse 1.5s infinite" : "none",
+                }}
+              >
+                {isRecording ? <Square size={14} /> : <Mic size={14} />}
+                {isRecording ? `Grabando · ${fmt(recordSeconds)}` : "Grabar un nuevo relato"}
+              </button>
+            </div>
+          ) : (
+            <div className="voces-controls absolute bottom-56 right-4 md:bottom-8 md:right-6 z-20 max-w-[220px] text-right">
+              <div className="text-xs px-3 py-1.5 rounded-lg" style={{ background: "#1C1914", color: "#8A7C63", border: "1px solid #33291F" }}>
+                Elige una sección para grabar un nuevo relato.
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

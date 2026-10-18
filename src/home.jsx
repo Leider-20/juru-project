@@ -1,41 +1,39 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, MessageCircle, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Menu, X, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import juruLogo from "./images/juru-logo.png";
-import juruHierbas from "./images/juru-hierbas.png";
-import juruMaquina from "./images/juru-maquina.png";
-import juruAprendizaje from "./images/juru-aprendizaje.png";
-import jurubolso from "./images/juru-bolso.png";
-import juruCoser from "./images/juru-coser.png";
-import juruCaseta from "./images/juru-caseta.png";
-import juruMolienda from "./images/juru-molienda.png";
-import juruPanela from "./images/juru-panela.png";
-import juruTerritorio from "./images/juru-territorio.png";
-import juruHerramientas from "./images/juru-herramientas.png";
-import juruTaller from "./images/juru-taller.jpg";
-import novedadEventos from "./images/juru-evento.png";
-import novedadProductos from "./images/juru-producto.png";
-import novedadLibro from "./images/juru-libro.png";
-import texturaTopografica from "./images/juru-lineas.png";
-import texturaQuienesSomos from "./images/juru-textura-2.png";
-import ilustracionSeñoras from "./images/juru-senoras.png";
-import mapaTerritorio from "./images/juru-mapa-territorio.png";
+import juruHierbas from "./images/home_img/juru-hierbas.png";
+import juruMaquina from "./images/home_img/juru-maquina.png";
+import juruAprendizaje from "./images/home_img/juru-aprendizaje.png";
+import jurubolso from "./images/home_img/juru-bolso.png";
+import juruCoser from "./images/home_img/juru-coser.png";
+import juruCaseta from "./images/home_img/juru-caseta.png";
+import juruMolienda from "./images/home_img/juru-molienda.png";
+import juruPanela from "./images/home_img/juru-panela.png";
+import juruTerritorio from "./images/home_img/juru-territorio.png";
+import juruHerramientas from "./images/home_img/juru-herramientas.png";
+import juruTaller from "./images/home_img/juru-taller.jpg";
+import novedadEventos from "./images/home_img/juru-evento.png";
+import novedadProductos from "./images/home_img/juru-producto.png";
+import novedadLibro from "./images/home_img/juru-libro.png";
+import texturaTopografica from "./images/home_img/juru-lineas.png";
+import texturaQuienesSomos from "./images/home_img/juru-textura-2.png";
+import ilustracionSeñoras from "./images/home_img/juru-senoras.png";
+import mapaTerritorio from "./images/home_img/juru-mapa-territorio.png";
 
-// Retratos de las mujeres de JURU — colócalos en src/images/ con estos
-// nombres de archivo (o cambia las rutas de abajo por las tuyas).
-import per1 from "./images/per_1.jpeg";
-import per2 from "./images/per_2.jpeg";
-import per3 from "./images/per_3.jpeg";
-import per4 from "./images/per_4.jpeg";
-import per5 from "./images/per_5.jpeg";
+// Retratos de las mujeres de JURU 
+import per1 from "./images/home_img/per_1.jpeg";
+import per2 from "./images/home_img/per_2.jpeg";
+import per3 from "./images/home_img/per_3.jpeg";
+import per4 from "./images/home_img/per_4.jpeg";
+import per5 from "./images/home_img/per_5.jpeg";
 
 // Nota: el orden real del menú (Sobre nosotros, Vive, Dona, Memorias, Voces)
 // se arma directamente en el header, porque "Dona" (un pill-link) va en
 // medio de esta lista, no al final.
 const NAV_LINKS_IZQ = [
   { label: "Sobre nosotros", href: "#quienes-somos" },
-  { label: "Vive", href: "#historia" },
 ];
 const NAV_LINKS_DER = [{ label: "Memorias", href: "#novedades" }];
 
@@ -96,6 +94,7 @@ const NOVEDADES = [
     texto:
       "Tuvimos la oportunidad de hacer parte del XIV Simposio internacional de Diseño y Cultura en @fadpcali. Hablamos un poco de cómo los contextos rurales en proceso de urbanización producen transformaciones culturales dentro de JURU.",
     href: "#",
+    to: "/eventos",
   },
   {
     badge: "Nuestros Productos",
@@ -104,6 +103,7 @@ const NOVEDADES = [
     texto:
       "Piezas hechas con tiempo, dedicación y saber: bolsos, prendas y accesorios que llevan parte de nuestra historia.",
     href: "#",
+    to: "/productos",
   },
   {
     badge: "Libro",
@@ -195,6 +195,56 @@ function Reveal({ children, className = "", delay = 0, duration = 500 }) {
     </div>
   );
 }
+
+// ---- Íconos de redes sociales (footer) -----------------------------------
+const iconProps = {
+  viewBox: "0 0 48 48",
+  width: 46,
+  height: 46,
+  "aria-hidden": true,
+  focusable: "false",
+};
+
+const IconInstagram = () => (
+  <svg {...iconProps} fill="none" stroke="currentColor" strokeWidth="4">
+    <rect x="5" y="5" width="38" height="38" rx="11" />
+    <circle cx="24" cy="24" r="9" />
+    <circle cx="35" cy="13" r="2" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const IconFacebook = () => (
+  <svg {...iconProps}>
+    <circle cx="24" cy="24" r="22" fill="currentColor" />
+    <path
+      d="M26.5 41V27.5h4.4l.7-5.2h-5.1v-3.3c0-1.5.4-2.5 2.6-2.5h2.7V12c-.5-.1-2.1-.2-4-.2-4 0-6.6 2.4-6.6 6.8v3.7h-4.4v5.2h4.4V41z"
+      fill="#272626"
+    />
+  </svg>
+);
+
+const IconWhatsapp = () => (
+  <svg {...iconProps}>
+    <path
+      d="M24 5C13.5 5 5 13.5 5 24c0 3.6 1 7 2.8 9.9L5 43l9.4-2.7A19 19 0 0 0 24 43c10.5 0 19-8.5 19-19S34.5 5 24 5z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M17.5 14.5c-.6 0-1.4.3-1.9 1-.7.9-1.4 2.2-.9 4 .8 2.9 3.2 6.2 6.4 8.7 3.2 2.4 6.1 3.2 8 2.7 1.3-.4 2.4-1.6 2.6-2.8.1-.5-.1-.8-.5-1l-3.4-1.6c-.4-.2-.8-.1-1.1.2l-1.3 1.5c-.2.2-.5.3-.8.2-1.8-.8-4.3-3-5.2-4.7-.1-.3-.1-.6.1-.8l1-1.3c.3-.4.3-.8.1-1.2L18.9 15c-.2-.3-.7-.5-1.4-.5z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+// Enlaces de las redes: reemplaza los "#" por los reales.
+const REDES = [
+  { name: "Instagram", label: "@juru.marca", href: "#", Icon: IconInstagram },
+  { name: "Facebook", label: "juru marca", href: "#", Icon: IconFacebook },
+  { name: "WhatsApp", label: "315 55 555", href: "#", Icon: IconWhatsapp },
+];
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -984,7 +1034,7 @@ export default function Home() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 80px 24px;
+          padding: 80px 24px 130px;
           background: #BD9882;
         }
         .newsletter::after {
@@ -1006,23 +1056,81 @@ export default function Home() {
 
         .footer {
           position: relative;
+          z-index: 2;
+          margin-top: -48px;
+          padding: 64px 8vw 34px;
+          border-radius: 50px 50px 0 0;
           background: var(--juru-dark);
           color: #FFEAEA;
-          padding: 58px 8vw 30px;
+          font-family: 'Alevia DEMO', 'Judson', serif;
         }
-        .footer-top { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 40px; align-items: start; padding-bottom: 35px; border-bottom: 1px solid rgba(189,152,130,.55); }
-        .footer-logo { width: 125px; filter: none; }
-        .footer-legal { max-width: 560px; margin: 0; font: 400 15px/1.45 'Alevia DEMO', 'Judson', serif; }
-        .footer-support-title { margin: 0 0 18px; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
-        .footer-support a { display: block; width: fit-content; margin-bottom: 9px; color: #FFEAEA; text-decoration: none; font: 400 15px 'Alevia DEMO', 'Judson', serif; transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide); }
+        .footer-main {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 60px;
+          align-items: start;
+        }
+        .footer-left { max-width: 640px; }
+        .footer-consent {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          cursor: pointer;
+          font: 400 15px/1.45 'Alevia DEMO', 'Judson', serif;
+        }
+        .footer-consent input {
+          flex-shrink: 0;
+          width: 18px;
+          height: 18px;
+          margin: 2px 0 0;
+          accent-color: var(--juru-red);
+          cursor: pointer;
+        }
+        .footer-social {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 44px;
+          margin: 40px 0 0;
+          padding: 0;
+          list-style: none;
+        }
+        .footer-social a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          color: #FFEAEA;
+          text-decoration: none;
+          font: 400 14px 'Alevia DEMO', 'Judson', serif;
+          transition: transform 300ms var(--ease-slide), opacity 500ms var(--ease-figma);
+        }
+        .footer-social a:hover { transform: translateY(-4px); opacity: .8; }
+        .footer-support { text-align: center; }
+        .footer-support-title { margin: 0 0 20px; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
+        .footer-support a {
+          display: block;
+          width: fit-content;
+          margin: 0 auto 12px;
+          color: #FFEAEA;
+          text-decoration: none;
+          font: 400 15px 'Alevia DEMO', 'Judson', serif;
+          transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide);
+        }
         .footer-support a:hover { opacity: .65; transform: translateX(3px); }
-        .footer-bottom { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: end; padding-top: 30px; }
-        .footer-social { display: flex; gap: 22px; }
-        .footer-social a { transition: transform 300ms var(--ease-slide), opacity 500ms var(--ease-figma); }
-        .footer-social a:hover { transform: translateY(-3px); opacity: .7; }
-        .footer-contact { font: 400 15px/1.8 'Alevia DEMO', 'Judson', serif; }
-        .footer-brand { text-align: right; color: rgba(243,243,201,.8); font: 500 64px 'Fredoka', sans-serif; }
-        .footer-credit { margin: 26px 0 0; text-align: center; color: #FFEAEA; opacity: .85; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
+        .footer-line {
+          height: 1px;
+          margin: 44px 0 26px;
+          background: linear-gradient(90deg, rgba(189,152,130,0), rgba(189,152,130,.7) 15%, rgba(189,152,130,.7) 85%, rgba(189,152,130,0));
+        }
+        .footer-bottom {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+        .footer-logo { width: 90px; height: auto; display: block; }
+        .footer-credit { margin: 0; color: #FFEAEA; opacity: .85; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
+        .footer a:focus-visible, .footer-consent input:focus-visible { outline: 2px solid #d3da63; outline-offset: 4px; }
 
         .mobile-overlay { position: fixed; inset: 0; z-index: 50; background: #1F1B14; color: white; display: flex; flex-direction: column; animation: menuIn 300ms var(--ease-slide) both; }
         @keyframes menuIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
@@ -1047,9 +1155,9 @@ export default function Home() {
           .map-detail-card img { height: 78px; }
           .news-grid { grid-template-columns: 1fr; max-width: 520px; }
           .news-image-wrap { height: 560px; }
-          .footer-top { grid-template-columns: 1fr; }
-          .footer-bottom { grid-template-columns: 1fr 1fr; }
-          .footer-brand { text-align: left; }
+          .footer-main { grid-template-columns: 1fr; gap: 44px; }
+          .footer-support { text-align: left; }
+          .footer-support a { margin-left: 0; }
         }
 
         @media (max-width: 560px) {
@@ -1077,12 +1185,12 @@ export default function Home() {
           .news { padding: 55px 20px 75px; }
           .news-title { font-size: 40px; }
           .news-image-wrap { height: 470px; }
-          .newsletter { padding: 60px 18px; }
+          .newsletter { padding: 60px 18px 110px; }
           .newsletter-form { flex-direction: column; gap: 10px; }
           .newsletter-input, .newsletter-button { width: 100%; height: 55px; border-radius: 50px; }
-          .footer { padding: 45px 24px 25px; }
-          .footer-bottom { grid-template-columns: 1fr; }
-          .footer-brand { text-align: left; }
+          .footer { padding: 48px 24px 28px; border-radius: 36px 36px 0 0; }
+          .footer-social { gap: 28px; }
+          .footer-bottom { flex-direction: column; align-items: flex-start; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1107,6 +1215,7 @@ export default function Home() {
             {NAV_LINKS_IZQ.map((item) => (
               <a key={item.label} href={item.href} className={navClass(item.href)} onClick={() => setActiveNav(item.href)}>{item.label}</a>
             ))}
+            <Link to="/vive">Vive</Link>
             <Link to="/voces">Voces</Link>
             {NAV_LINKS_DER.map((item) => (
               <a key={item.label} href={item.href} className={navClass(item.href)} onClick={() => setActiveNav(item.href)}>{item.label}</a>
@@ -1114,7 +1223,7 @@ export default function Home() {
           </nav>
 
           <div className="hero-nav-spacer">
-            <a href="#dona" className="hero-club" onClick={() => setActiveNav("#dona")}>Club Creativo</a>
+            <Link to="/clubCreativo" className="hero-club">Club Creativo</Link>
             <button className="mobile-menu-button" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
               <Menu size={27} />
             </button>
@@ -1125,7 +1234,7 @@ export default function Home() {
           <Reveal>
             <p className="hero-kicker">De nuestras raíces nace</p>
             <h1 className="hero-title">la inspiración, de nuestras manos, la historia</h1>
-            <a href="#historia" className="hero-cta">Conoce nuestra historia</a>
+            <Link to="/documental" className="hero-cta">Conoce nuestra historia</Link>
           </Reveal>
         </div>
       </section>
@@ -1142,10 +1251,11 @@ export default function Home() {
             {NAV_LINKS_IZQ.map((item) => (
               <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
             ))}
-            <a href="#dona" onClick={() => setMenuOpen(false)}>Club Creativo</a>
+            <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
             {NAV_LINKS_DER.map((item) => (
               <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
             ))}
+            <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
           </nav>
         </div>
@@ -1345,7 +1455,11 @@ export default function Home() {
                   <img src={item.img} alt={item.badge} />
                 </div>
                 <p className="news-copy">{item.texto}</p>
-                <a href={item.href} className="news-more">Leer más</a>
+                {item.to ? (
+                  <Link to={item.to} className="news-more">Leer más</Link>
+                ) : (
+                  <a href={item.href} className="news-more">Leer más</a>
+                )}
               </article>
             </Reveal>
           ))}
@@ -1356,7 +1470,7 @@ export default function Home() {
         <div className="newsletter-inner">
           <Reveal>
             <h2 className="newsletter-title">¡Toma la iniciativa y entérate de todo lo nuevo!</h2>
-            <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
+            <form id="newsletter-form" className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
               <input className="newsletter-input" type="email" required placeholder="Ingresa tu correo aquí" aria-label="Correo electrónico" />
               <button className="newsletter-button" type="submit">Suscríbete</button>
             </form>
@@ -1365,9 +1479,27 @@ export default function Home() {
       </section>
 
       <footer className="footer">
-        <div className="footer-top">
-          <img src={juruLogo} alt="JURU" className="footer-logo" />
-          <p className="footer-legal">Declaro que la información obtenida para el tratamiento de mis datos personales la he suministrado de forma automática y/o manual y es verídica.</p>
+        <div className="footer-main">
+          <div className="footer-left">
+            <label className="footer-consent">
+              <input type="checkbox" form="newsletter-form" required />
+              <span>
+                Declaro que la información obtenida para el tratamiento de mis datos personales la he suministrado de forma automática y/o manual y es verídica.
+              </span>
+            </label>
+
+            <ul className="footer-social" aria-label="Redes sociales">
+              {REDES.map(({ name, label, href, Icon }) => (
+                <li key={name}>
+                  <a href={href} aria-label={name}>
+                    <Icon />
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="footer-support">
             <p className="footer-support-title">Alternativas de apoyo</p>
             <a href="#dona">Compra</a>
@@ -1376,21 +1508,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <div className="footer-social" aria-label="Redes sociales">
-            <a href="#" aria-label="Instagram">I</a>
-            <a href="#" aria-label="Facebook">f</a>
-            <a href="#" aria-label="WhatsApp"><MessageCircle size={22} /></a>
-          </div>
-          <div className="footer-contact">
-            <div>@juru.marca</div>
-            <div>juru marca</div>
-            <div>315 55 555</div>
-          </div>
-          <div className="footer-brand">JURU</div>
-        </div>
+        <div className="footer-line" />
 
-        <p className="footer-credit">Este sitio está diseñado con todo el 🤍 por Edna Design</p>
+        <div className="footer-bottom">
+          <img src={juruLogo} alt="JURU" className="footer-logo" />
+          <p className="footer-credit">Este sitio está diseñado con todo el 🤍 por Edna Design</p>
+        </div>
       </footer>
     </main>
   );
