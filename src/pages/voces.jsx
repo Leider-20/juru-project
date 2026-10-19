@@ -24,7 +24,7 @@ import ramasIzquierda from "../images/voces_img/juru-voces_ramas_inferior_izquie
 // con "/#..." para que, al venir desde otra página, el navegador cargue el
 // Home y se desplace hasta la sección.
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
+const NAV_LINKS_DER = [{ label: "Memorias", to: "/memorias" }];
 
 // Tiempos de la transición portada <-> foro (ms)
 const FORO_SCROLL_MS = 900; // referencia de lo que tarda el scroll suave; el bloqueo espera el doble como tope de seguridad
@@ -1078,7 +1078,7 @@ export default function JuruPrototype() {
           <Link to="/vive">Vive</Link>
           <Link to="/voces" className="vn-active" aria-current="page">Voces</Link>
           {NAV_LINKS_DER.map((item) => (
-            <a key={item.label} href={item.href}>{item.label}</a>
+            <Link key={item.label} to={item.to}>{item.label}</Link>
           ))}
         </nav>
 
@@ -1105,7 +1105,7 @@ export default function JuruPrototype() {
             <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>{item.label}</Link>
             ))}
             <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
           </nav>

@@ -13,7 +13,7 @@ import clubCajita from "../images/clubCreativo_img/juru-club_cajita_contenido_un
 import clubTaller from "../images/clubCreativo_img/juru-club_taller_mujeres_manualidades.png";
 
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
+const NAV_LINKS_DER = [{ label: "Memorias", to: "/memorias" }];
 
 const PLANES = [
   { id: "mensual", titulo: "Mensual", subtitulo: "Pago mes a mes", precio: "$ 99.000 cop / caja", tipo: "Pago mensual recurrente" },
@@ -120,6 +120,7 @@ export default function ClubCreativo() {
   const videoRef = useRef(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.body.style.background = "#2A1408";
     return () => {
       document.body.style.background = "";
@@ -635,7 +636,7 @@ export default function ClubCreativo() {
             <Link to="/vive">Vive</Link>
             <Link to="/voces">Voces</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href}>{item.label}</a>
+              <Link key={item.label} to={item.to}>{item.label}</Link>
             ))}
           </nav>
 
@@ -693,7 +694,7 @@ export default function ClubCreativo() {
             <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>{item.label}</Link>
             ))}
             <a href="#planes" onClick={() => setMenuOpen(false)}>Club Creativo</a>
           </nav>

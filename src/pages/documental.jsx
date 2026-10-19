@@ -13,7 +13,7 @@ import videoDocumental from "../images/documental_mp4/juru-documental.mp4";
 // Mismo menú que home.jsx. "Sobre nosotros" y "Memorias" son secciones de
 // la página principal, por eso apuntan a "/" con su ancla.
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
+const NAV_LINKS_DER = [{ label: "Memorias", to: "/memorias" }];
 
 // A dónde lleva el botón "¡Quiero conocer más!". Cámbialo por la ruta que
 // corresponda (por ejemplo "/vive" o "/voces").
@@ -232,7 +232,7 @@ export default function Documental() {
           <Link to="/vive">Vive</Link>
           <Link to="/voces">Voces</Link>
           {NAV_LINKS_DER.map((item) => (
-            <a key={item.label} href={item.href}>{item.label}</a>
+            <Link key={item.label} to={item.to}>{item.label}</Link>
           ))}
         </nav>
 
@@ -258,7 +258,7 @@ export default function Documental() {
             ))}
             <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>{item.label}</Link>
             ))}
             <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>

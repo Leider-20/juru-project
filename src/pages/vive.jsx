@@ -13,7 +13,7 @@ import viveBurro from "../images/vive_img/juru-vive_burro_con_carga.png";
 import iconoCaminos from "../images/vive_img/juru-vive_icono_sigue_caminos.png";
 
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
+const NAV_LINKS_DER = [{ label: "Memorias", to: "/memorias" }];
 
 /* ----------------------------- Iconos de los pasos ----------------------------- */
 const svgProps = {
@@ -66,6 +66,7 @@ export default function ViveJuru() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.body.style.background = "#F5F5D5";
     return () => {
       document.body.style.background = "";
@@ -317,7 +318,7 @@ export default function ViveJuru() {
           <Link to="/vive" className="vj-active" aria-current="page">Vive</Link>
           <Link to="/voces">Voces</Link>
           {NAV_LINKS_DER.map((item) => (
-            <a key={item.label} href={item.href}>{item.label}</a>
+            <Link key={item.label} to={item.to}>{item.label}</Link>
           ))}
         </nav>
 
@@ -344,7 +345,7 @@ export default function ViveJuru() {
             <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>{item.label}</Link>
             ))}
             <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
           </nav>

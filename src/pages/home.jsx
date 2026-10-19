@@ -349,6 +349,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // Al llegar desde otra página empezamos arriba, salvo que el enlace traiga un ancla (/#novedades, etc.).
+    if (!window.location.hash) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     document.body.style.background = "#F7F2E4";
     return () => {
       document.body.style.background = "";
