@@ -2,32 +2,33 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
-import juruLogo from "./images/juru-logo.png";
-import juruHierbas from "./images/home_img/juru-hierbas.png";
-import juruMaquina from "./images/home_img/juru-maquina.png";
-import juruAprendizaje from "./images/home_img/juru-aprendizaje.png";
-import jurubolso from "./images/home_img/juru-bolso.png";
-import juruCoser from "./images/home_img/juru-coser.png";
-import juruCaseta from "./images/home_img/juru-caseta.png";
-import juruMolienda from "./images/home_img/juru-molienda.png";
-import juruPanela from "./images/home_img/juru-panela.png";
-import juruTerritorio from "./images/home_img/juru-territorio.png";
-import juruHerramientas from "./images/home_img/juru-herramientas.png";
-import juruTaller from "./images/home_img/juru-taller.jpg";
-import novedadEventos from "./images/home_img/juru-evento.png";
-import novedadProductos from "./images/home_img/juru-producto.png";
-import novedadLibro from "./images/home_img/juru-libro.png";
-import texturaTopografica from "./images/home_img/juru-lineas.png";
-import texturaQuienesSomos from "./images/home_img/juru-textura-2.png";
-import ilustracionSeñoras from "./images/home_img/juru-senoras.png";
-import mapaTerritorio from "./images/home_img/juru-mapa-territorio.png";
+import heroVideo from "../videos/hero.mp4";
+import juruLogo from "../images/juru-logo.png";
+import juruHierbas from "../images/home_img/juru-hierbas.png";
+import juruMaquina from "../images/home_img/juru-maquina.png";
+import juruAprendizaje from "../images/home_img/juru-aprendizaje.png";
+import jurubolso from "../images/home_img/juru-bolso.png";
+import juruCoser from "../images/home_img/juru-coser.png";
+import juruCaseta from "../images/home_img/juru-caseta.png";
+import juruMolienda from "../images/home_img/juru-molienda.png";
+import juruPanela from "../images/home_img/juru-panela.png";
+import juruTerritorio from "../images/home_img/juru-territorio.png";
+import juruHerramientas from "../images/home_img/juru-herramientas.png";
+import juruTaller from "../images/home_img/juru-taller.jpg";
+import novedadEventos from "../images/home_img/juru-evento.png";
+import novedadProductos from "../images/home_img/juru-producto.png";
+import novedadLibro from "../images/home_img/juru-libro.png";
+import texturaTopografica from "../images/home_img/juru-lineas.png";
+import texturaQuienesSomos from "../images/home_img/juru-textura-2.png";
+import ilustracionSeñoras from "../images/home_img/juru-senoras.png";
+import mapaTerritorio from "../images/home_img/juru-mapa-territorio.png";
 
 // Retratos de las mujeres de JURU 
-import per1 from "./images/home_img/per_1.jpeg";
-import per2 from "./images/home_img/per_2.jpeg";
-import per3 from "./images/home_img/per_3.jpeg";
-import per4 from "./images/home_img/per_4.jpeg";
-import per5 from "./images/home_img/per_5.jpeg";
+import per1 from "../images/home_img/per_1.jpeg";
+import per2 from "../images/home_img/per_2.jpeg";
+import per3 from "../images/home_img/per_3.jpeg";
+import per4 from "../images/home_img/per_4.jpeg";
+import per5 from "../images/home_img/per_5.jpeg";
 
 // Nota: el orden real del menú (Sobre nosotros, Vive, Dona, Memorias, Voces)
 // se arma directamente en el header, porque "Dona" (un pill-link) va en
@@ -35,7 +36,7 @@ import per5 from "./images/home_img/per_5.jpeg";
 const NAV_LINKS_IZQ = [
   { label: "Sobre nosotros", href: "#quienes-somos" },
 ];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "#novedades" }];
+const NAV_LINKS_DER = [{ label: "Memorias", to: "/memorias" }];
 
 const GALLERY = [
   { src: juruHierbas, alt: "Ofrenda de hierbas y flores sobre tela" },
@@ -74,7 +75,7 @@ const TESTIMONIOS = [
   },
   {
     texto: "Somos huella, somos perseverancia, compromiso y unión.",
-    autora: "Albertina",
+    autora: "Albertina Tapasco",
   },
   {
     texto: "Somos un todo, una unidad, un grupo que trabaja unido con un solo propósito. El esfuerzo de nosotras ha logrado fortalecernos e ir creciendo y aprendiendo el arte de crear.",
@@ -112,6 +113,7 @@ const NOVEDADES = [
     texto:
       "Memorias: un recorrido en papel por las historias y las manos detrás de cada pieza de JURU.",
     href: "#",
+    to: "/memorias",
   },
 ];
 
@@ -250,6 +252,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [faceIdx, setFaceIdx] = useState(0);
   const [hoverIdx, setHoverIdx] = useState(null);
+  const [navScrolled, setNavScrolled] = useState(false);
 
   // ---- Scroll-pinned "tarjetas apiladas" ---------------------------------
   const MAX_SHRINK = 0.25;    // la tarjeta que queda atrás termina en scale(.75)
@@ -266,8 +269,8 @@ export default function Home() {
   const nextFace = () => goToFace(faceIdx + 1);
 
   // Deslizar con el dedo (o arrastrar con el mouse) sobre la foto del
-  // testimonio para cambiar de artesana, además de los puntos y las
-  // flechas. Solo guardamos dónde empezó el toque; al soltar, comparamos
+  // testimonio para cambiar de artesana, además de las flechas. Solo
+  // guardamos dónde empezó el toque; al soltar, comparamos
   // contra dónde terminó para decidir si fue un swipe válido.
   const touchStartX = useRef(null);
   const onTestimonialTouchStart = (e) => {
@@ -336,6 +339,14 @@ export default function Home() {
     };
   }, []);
 
+  // Barra fija: se oscurece un poco apenas se empieza a hacer scroll.
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     document.body.style.background = "#F7F2E4";
     return () => {
@@ -346,7 +357,7 @@ export default function Home() {
   return (
     <main className="juru-page">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&family=Judson:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Fredoka:wght@400;500&family=Judson:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&display=swap');
 
         :root {
           --juru-cream: #F7F2E4;
@@ -366,6 +377,8 @@ export default function Home() {
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        /* Que los enlaces a secciones no queden tapados por la barra fija */
+        #inicio, #historia, #quienes-somos, #mapa, #novedades, #dona { scroll-margin-top: 70px; }
         body { margin: 0; }
         a { color: inherit; }
         button, input { font: inherit; }
@@ -395,6 +408,7 @@ export default function Home() {
         .hero {
           position: relative;
           isolation: isolate;
+          z-index: 40;   /* mantiene la barra fija por encima del resto de secciones */
           height: min(100vh, 820px);
           min-height: 650px;
           overflow: hidden;
@@ -423,8 +437,10 @@ export default function Home() {
           background: linear-gradient(180deg, rgba(247,242,228,0) 0%, var(--juru-cream) 100%);
           pointer-events: none;
         }
+        /* Barra fija: se queda arriba mientras se hace scroll. */
         .hero-nav {
-          position: relative;
+          position: fixed;
+          top: 0; left: 0; right: 0;
           z-index: 5;
           height: 70px;
           display: grid;
@@ -433,6 +449,14 @@ export default function Home() {
           padding: 0 4.5vw;
           background: rgba(59,59,59,.28);
           backdrop-filter: blur(2px);
+          transition: background 300ms var(--ease-slide), box-shadow 300ms var(--ease-slide);
+        }
+        /* Al bajar, el fondo se vuelve más sólido para que el menú blanco
+           se lea sobre las secciones claras. */
+        .hero-nav.is-scrolled {
+          background: rgba(39,38,38,.88);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 6px 20px rgba(0,0,0,.18);
         }
         .hero-nav-logo { justify-self: start; }
         .hero-nav-spacer {
@@ -501,13 +525,13 @@ export default function Home() {
         .hero-content {
           position: relative;
           z-index: 3;
-          height: calc(100% - 70px);
+          height: 100%;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 0 20px 80px;
+          padding: 70px 20px 80px;   /* 70px = alto de la barra fija */
         }
         .hero-kicker {
           margin: 0 0 10px;
@@ -632,7 +656,11 @@ export default function Home() {
           margin: 0 0 34px;
           text-align: center;
           color: var(--juru-brown);
-          font: 400 50px 'Alevia DEMO', 'Judson', serif;
+          font-family: "Caveat", cursive;
+          font-optical-sizing: auto;
+          font-weight: 600;
+          font-style: normal;
+          font-size: 64px;
         }
         .who-layout {
           max-width: 1000px;
@@ -715,6 +743,9 @@ export default function Home() {
           overflow: hidden;
           background: #1f1b14;
         }
+        /* Todas las fotos van apiladas. La que entra se funde por encima de la
+           que sale (que se queda visible hasta que termina el fundido), así no
+           se ve un "bajón" oscuro a mitad de la transición. */
         .testimonial img {
           position: absolute;
           inset: 0;
@@ -722,6 +753,14 @@ export default function Home() {
           height: 100%;
           object-fit: cover;
           object-position: center;
+          opacity: 0;
+          z-index: 0;
+          transition: opacity 0s linear 800ms;
+        }
+        .testimonial img.is-active {
+          opacity: 1;
+          z-index: 1;
+          transition: opacity 800ms ease;
         }
         .testimonial::after {
           content: '';
@@ -740,7 +779,16 @@ export default function Home() {
           padding: 52px clamp(28px, 7vw, 110px);
           background: transparent;
         }
-        .testimonial-copy { max-width: min(470px, 44vw); }
+        /* El texto vuelve a entrar con un fade suave en cada cambio (el
+           key={faceIdx} del JSX reinicia la animación). */
+        .testimonial-copy {
+          max-width: min(470px, 44vw);
+          animation: testimonialTextIn 700ms var(--ease-slide) both;
+        }
+        @keyframes testimonialTextIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
         .testimonial-text {
           margin: 0 0 34px;
           color: white;
@@ -753,17 +801,6 @@ export default function Home() {
           font: 400 clamp(24px, 2.5vw, 36px) 'Alevia DEMO', 'Judson', serif;
           text-shadow: 0 3px 12px rgba(0,0,0,.35);
         }
-        .dots {
-          position: absolute;
-          z-index: 3;
-          bottom: 24px;
-          left: 55%; right: 0;
-          display: flex;
-          justify-content: center;
-          gap: 16px;
-        }
-        .dot { width: 34px; height: 34px; border-radius: 999px; border: 1px solid white; background: rgba(217,217,217,.46); padding: 0; }
-        .dot.active { background: #D9D9D9; }
         .testimonial-arrow {
           position: absolute;
           top: 50%;
@@ -786,11 +823,9 @@ export default function Home() {
         .testimonial-arrow-next { right: 20px; }
         @media (max-width: 560px) {
           .testimonial { height: 520px; }
-          .testimonial img { position: absolute; inset: 0; width: 100%; height: 100%; }
           .testimonial::after { inset: 0; background: linear-gradient(90deg, rgba(20,16,10,.76), rgba(20,16,10,.12)); }
           .testimonial-content { padding: 30px 24px 75px; background: transparent; align-items: flex-end; }
           .testimonial-copy { max-width: 680px; }
-          .dots { left: 0; }
           .testimonial-arrow { width: 38px; height: 38px; }
           .testimonial-arrow-prev { left: 12px; }
           .testimonial-arrow-next { right: 12px; }
@@ -1200,11 +1235,11 @@ export default function Home() {
       `}</style>
 
       <section className="hero" aria-label="Inicio">
-        <video className="hero-video" autoPlay muted loop playsInline preload="auto" src="/videos/hero.mp4" />
+        <video className="hero-video" autoPlay muted loop playsInline preload="auto" src={heroVideo} />
         <div className="hero-shade" />
         <div className="hero-fade" />
 
-        <header className="hero-nav">
+        <header className={`hero-nav ${navScrolled ? "is-scrolled" : ""}`}>
           <div className="hero-nav-logo">
             <a href="#inicio" aria-label="JURU inicio">
               <img className="hero-logo" src={juruLogo} alt="JURU" />
@@ -1218,7 +1253,7 @@ export default function Home() {
             <Link to="/vive">Vive</Link>
             <Link to="/voces">Voces</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} className={navClass(item.href)} onClick={() => setActiveNav(item.href)}>{item.label}</a>
+              <Link key={item.label} to={item.to}>{item.label}</Link>
             ))}
           </nav>
 
@@ -1253,7 +1288,7 @@ export default function Home() {
             ))}
             <Link to="/clubCreativo" onClick={() => setMenuOpen(false)}>Club Creativo</Link>
             {NAV_LINKS_DER.map((item) => (
-              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+              <Link key={item.label} to={item.to} onClick={() => setMenuOpen(false)}>{item.label}</Link>
             ))}
             <Link to="/vive" onClick={() => setMenuOpen(false)}>Vive</Link>
             <Link to="/voces" onClick={() => setMenuOpen(false)}>Voces</Link>
@@ -1296,7 +1331,7 @@ export default function Home() {
         <section id="quienes-somos" className="who">
         <div className="who-inner">
           <Reveal>
-            <h2 className="who-heading">¿ Quienes Somos ?</h2>
+            <h2 className="who-heading">¿Quienes Somos?</h2>
           </Reveal>
 
           <div className="who-layout">
@@ -1321,10 +1356,18 @@ export default function Home() {
         onTouchStart={onTestimonialTouchStart}
         onTouchEnd={onTestimonialTouchEnd}
       >
-        <img src={ARTESANAS[faceIdx].src} alt={ARTESANAS[faceIdx].alt} />
+        {ARTESANAS.map((a, i) => (
+          <img
+            key={a.src}
+            src={a.src}
+            alt={a.alt}
+            className={i === faceIdx ? "is-active" : ""}
+            aria-hidden={i !== faceIdx}
+          />
+        ))}
         <div className="testimonial-content">
           <Reveal>
-            <div className="testimonial-copy">
+            <div className="testimonial-copy" key={faceIdx}>
               <p className="testimonial-text">{TESTIMONIOS[faceIdx].texto}</p>
               <p className="testimonial-author">{TESTIMONIOS[faceIdx].autora}</p>
             </div>
@@ -1336,16 +1379,6 @@ export default function Home() {
         <button className="testimonial-arrow testimonial-arrow-next" onClick={nextFace} aria-label="Foto siguiente">
           <ChevronRight size={22} />
         </button>
-        <div className="dots">
-          {ARTESANAS.map((_, i) => (
-            <button
-              key={i}
-              className={`dot ${i === faceIdx ? "active" : ""}`}
-              onClick={() => goToFace(i)}
-              aria-label={`Ver foto ${i + 1}`}
-            />
-          ))}
-        </div>
       </section>
 
       <section className="territory" id="mapa">

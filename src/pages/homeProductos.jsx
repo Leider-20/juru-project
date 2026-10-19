@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Undo2 } from "lucide-react";
 
 // Logo (misma ruta que usa home.jsx)
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
 
 // Imágenes de esta página — carpeta: src/images/homeProductos_img/
 // Cada recuadro lleva DOS imágenes: la principal y la que aparece al pasar
@@ -13,14 +13,19 @@ import juruLogo from "./images/juru-logo.png";
 //   Bolso de retazos con perlas    -> juru-bolso-retazos-frente.png / juru-bolso-retazos-detalle.png
 //   Bolso vinotinto                -> juru-bolso-vino-frente.png   / juru-bolso-vino-detalle.png
 //   Tote de tela bordado a mano    -> juru-tote-frente.png         / juru-tote-detalle.png
-import neceserFrente from "./images/homeProductos_img/juru-neceser-frente.png";
-import neceserDetalle from "./images/homeProductos_img/juru-neceser-detalle.png";
-import retazosFrente from "./images/homeProductos_img/juru-bolso-retazos-frente.png";
-import retazosDetalle from "./images/homeProductos_img/juru-bolso-retazos-detalle.png";
-import vinoFrente from "./images/homeProductos_img/juru-bolso-vino-frente.png";
-import vinoDetalle from "./images/homeProductos_img/juru-bolso-vino-detalle.png";
-import toteFrente from "./images/homeProductos_img/juru-tote-frente.png";
-import toteDetalle from "./images/homeProductos_img/juru-tote-detalle.png";
+import neceserFrente from "../images/homeProductos_img/juru-neceser-frente.png";
+import neceserDetalle from "../images/homeProductos_img/juru-neceser-detalle.png";
+import retazosFrente from "../images/homeProductos_img/juru-bolso-retazos-frente.png";
+import retazosDetalle from "../images/homeProductos_img/juru-bolso-retazos-detalle.png";
+import vinoFrente from "../images/homeProductos_img/juru-bolso-vino-frente.png";
+import vinoDetalle from "../images/homeProductos_img/juru-bolso-vino-detalle.png";
+import toteFrente from "../images/homeProductos_img/juru-tote-frente.png";
+import toteDetalle from "../images/homeProductos_img/juru-tote-detalle.png";
+
+// Corazón del rectángulo central. Pon tu imagen en esta carpeta con este
+// nombre exacto: src/images/homeProductos_img/juru-corazon.png
+// (si es PNG o SVG con fondo transparente, se verá mejor)
+import corazon from "../images/homeProductos_img/juru-corazon.png";
 
 // Mismo menú que home.jsx. "Sobre nosotros" y "Memorias" son secciones de
 // la página principal, por eso apuntan a "/" con su ancla.
@@ -31,14 +36,19 @@ const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
 // cuando lo tengas.
 const PEDIDO_HREF = "#";
 
-// Cuadrícula de 3 x 2: los recuadros de la columna central son decorativos
-// (solo color), igual que en el diseño.
+// Texto del rectángulo central (ocupa las dos filas de la columna del medio).
+const TEXTO_PANEL =
+  "Cada pieza tiene una identidad propia. En sus formas, colores, materiales y detalles se encuentran los saberes, la creatividad y las historias de las mujeres que las crean. Más que objetos, son expresiones de una tradición que se transforma sin perder sus raíces. Explora el catálogo y descubre la huella que hace único a cada producto.";
+
+// Cuadrícula de 3 columnas: los productos van en las columnas de los lados
+// (2 por columna) y el rectángulo con texto ocupa la columna del medio.
+// El panel se ubica con grid-column / grid-row en el CSS, así que su lugar
+// en esta lista solo define el orden en pantallas pequeñas.
 const PRODUCTOS = [
   { id: "neceser", alt: "Neceser verde con figuras de cuentas", frente: neceserFrente, detalle: neceserDetalle },
-  { id: "deco-1" },
   { id: "retazos", alt: "Bolso de retazos de cuero con asas de madera", frente: retazosFrente, detalle: retazosDetalle },
+  { id: "panel", panel: true },
   { id: "vino", alt: "Bolso vinotinto de JURU", frente: vinoFrente, detalle: vinoDetalle },
-  { id: "deco-2" },
   { id: "tote", alt: "Tote de tela con flores y pavo real bordados a mano", frente: toteFrente, detalle: toteDetalle },
 ];
 
@@ -86,7 +96,7 @@ export default function HomeProductos() {
   return (
     <main className={`prod-page ${leaving ? "is-leaving" : ""}`}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&family=Judson:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Fredoka:wght@400;500&family=Judson:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&display=swap');
 
         :root {
           --ease-figma: ${EASE_FIGMA};
@@ -225,13 +235,12 @@ export default function HomeProductos() {
           row-gap: 66px;
           padding: 0 2.7vw;
         }
-        .prod-card, .prod-deco {
+        .prod-card {
           position: relative;
           aspect-ratio: 416 / 348;
           border-radius: 50px;
           overflow: hidden;
         }
-        .prod-deco { background: #934B2E; }
         .prod-card { background: #8a5a1c; cursor: pointer; }
         .prod-card img {
           position: absolute;
@@ -251,6 +260,37 @@ export default function HomeProductos() {
         .prod-card:hover .img-base,
         .prod-card:focus-visible .img-base,
         .prod-card.is-open .img-base { opacity: 0; }
+
+        /* ---------- Rectángulo central con texto ---------- */
+        /* Ocupa la columna del medio y las dos filas. */
+        .prod-panel {
+          grid-column: 2;
+          grid-row: 1 / span 2;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;   /* texto y corazón agrupados en el centro */
+          align-items: center;
+          gap: 38px;
+          padding: 8% 11%;
+          border-radius: 50px;
+          background: #934B2E;
+          color: #fff;
+        }
+        .prod-panel-text {
+          margin: 0;
+          font-family: 'Caveat', cursive;
+          font-weight: 500;
+          font-size: clamp(20px, 2.15vw, 33px);
+          line-height: 1.25;
+          text-align: left;
+        }
+        /* Tamaño del corazón: cambia el width para hacerlo más grande o pequeño */
+        .prod-panel-heart {
+          flex-shrink: 0;
+          display: block;
+          width: 72px;
+          height: auto;
+        }
 
         /* ---------- Llamado a la compra ---------- */
         .prod-buy {
@@ -319,8 +359,10 @@ export default function HomeProductos() {
 
           .prod-top { height: 150px; padding-top: 40px; }
           .prod-grid { grid-template-columns: 1fr 1fr; column-gap: 16px; row-gap: 16px; padding: 0 16px; }
-          .prod-deco { display: none; }
           .prod-card { border-radius: 30px; }
+          /* El texto pasa a ocupar todo el ancho, entre los productos */
+          .prod-panel { grid-column: 1 / -1; grid-row: auto; border-radius: 30px; padding: 40px 32px 32px; }
+          .prod-panel-text { font-size: 24px; }
 
           .prod-buy { grid-template-columns: 1fr; padding: 80px 28px 56px; }
           .prod-cta { justify-self: start; margin: 0; }
@@ -400,13 +442,17 @@ export default function HomeProductos() {
 
       <section className="prod-grid" aria-label="Nuestros productos">
         {PRODUCTOS.map((p) =>
-          p.frente ? (
+          p.panel ? (
+            <div key={p.id} className="prod-panel">
+              <p className="prod-panel-text">{TEXTO_PANEL}</p>
+              {/* Corazón: se cambia con el archivo juru-corazon.png (ver import arriba) */}
+              <img className="prod-panel-heart" src={corazon} alt="" aria-hidden="true" />
+            </div>
+          ) : (
             <div key={p.id} className="prod-card" tabIndex={0} role="img" aria-label={p.alt}>
               <img className="img-base" src={p.frente} alt="" />
               <img className="img-hover" src={p.detalle} alt="" />
             </div>
-          ) : (
-            <div key={p.id} className="prod-deco" aria-hidden="true" />
           )
         )}
       </section>

@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Play, Pause, MapPin, Clock, Mic, Square, Trash2, Menu, X } from "lucide-react";
+import { Play, Pause, MapPin, Clock, Mic, Square, Trash2, Menu, X, ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
+
+// Imágenes de la portada "Formar la palabra" — carpeta: src/images/voces_img/
+// Nombres que debes ponerle a tus archivos:
+//   juru-voces_ramas_superior_derecha.png  -> ramas rojizas de arriba a la derecha
+//   juru-voces_ramas_inferior_izquierda.png -> ramas doradas de abajo a la izquierda
+import ramasDerecha from "../images/voces_img/juru-voces_ramas_superior_derecha.png";
+import ramasIzquierda from "../images/voces_img/juru-voces_ramas_inferior_izquierda.png";
 
 // ---------------------------------------------------------------------------
 // JURU — proyecto propio inspirado en la idea de un "quipu" (hilos con
@@ -17,7 +24,11 @@ import juruLogo from "./images/juru-logo.png";
 // con "/#..." para que, al venir desde otra página, el navegador cargue el
 // Home y se desplace hasta la sección.
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
+const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
+
+// Tiempos de la transición portada <-> foro (ms)
+const FORO_SCROLL_MS = 900; // referencia de lo que tarda el scroll suave; el bloqueo espera el doble como tope de seguridad
+const FORO_SALIDA_MS = 850; // lo que tarda el regreso a la portada antes de cerrar el foro
 
 // Aclara u oscurece un color hexadecimal. percent > 0 aclara, < 0 oscurece.
 function shade(hex, percent) {
@@ -74,13 +85,12 @@ const SECCIONES = [
       "¿Qué parte de ser mujer y cuidar de otros casi nadie ve?",
       "¿Qué haces cuando necesitas un momento para ti?",
       "¿Qué sueño has dejado pendiente?",
-      "¿Qué has aprendido de ser mamá?",
       "¿Qué te gustaría que otra mujer entendiera de tu día a día?",
     ],
   },
   {
     id: "lo-que-se-hacer",
-    label: "🪡 Lo que hago",
+    label: "🪡 Lo que has aprendido",
     keywords: "Trabajo · saberes · aprendizajes · emprendimiento · sueños",
     desc: "Háblanos de esos saberes que nacieron de tus manos, de tus experiencias y de todo lo que la vida te ha enseñado, cada habilidad guarda una historia, un esfuerzo y una parte de quien eres.",
     color: "#f3c407",
@@ -329,6 +339,179 @@ export default function JuruPrototype() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("mi-vida");
 
+  // Sección del foro: el botón "¿Qué quieres compartir hoy?" de la portada
+  // baja hasta aquí.
+  // El foro NO se muestra hasta que la persona toca el botón: así la portada
+  // se ve completa y el botón tiene sentido. Al abrirse, aparece con un
+  // fundido y la página baja hasta él (scroll suave). Una vez abajo, la
+  // página se bloquea: solo se puede volver a la portada con el botón
+  // "Volver" del menú lateral, que hace la transición inversa.
+  const foroRef = useRef(null);
+  const [foroAbierto, setForoAbierto] = useState(false);
+  const [foroSaliendo, setForoSaliendo] = useState(false);
+
+  // rAF de la espera de salida (ver volverALaPortada)
+  const salidaRef = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(salidaRef.current), []);
+
+  // Mientras el foro se está yendo (sube a la portada) la página no debe
+  // poder moverse: si el usuario interrumpe la subida suave, el foro se
+  // cerraría con la página a medio camino y todo "se reacomodaría" de golpe.
+  useEffect(() => {
+    if (!foroSaliendo) return;
+    const bloquear = (e) => e.preventDefault();
+    window.addEventListener("wheel", bloquear, { passive: false });
+    window.addEventListener("touchmove", bloquear, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", bloquear);
+      window.removeEventListener("touchmove", bloquear);
+    };
+  }, [foroSaliendo]);
+
+  const irAlForo = () => {
+    // Si el foro todavía se está yendo, ignorar el clic: abrirlo ahora
+    // chocaría con el cierre pendiente (se desmontaba a mitad de la bajada).
+    if (foroSaliendo) return;
+    if (!foroAbierto) {
+      setForoAbierto(true); // el scroll se hace en el efecto de abajo
+    } else {
+      foroRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // Bajada: al montarse el foro, scroll suave hasta él.
+  useEffect(() => {
+    if (!foroAbierto) return;
+    const id = requestAnimationFrame(() => {
+      foroRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [foroAbierto]);
+
+  // Bloqueo: mientras el foro está abierto la página no se puede mover.
+  // Fases:
+  //  1) Transición: baja suave hacia el foro. Se bloquea TODO input del
+  //     usuario para que no pueda interrumpir la animación a medias (si la
+  //     interrumpe, el bloqueo después lo "salta" bruscamente a su sitio).
+  //  2) Bloqueo: al llegar, se fija la posición exacta, se oculta el
+  //     overflow y se anula el rebote elástico.
+  // Se libera al volver o al salir.
+  useEffect(() => {
+    if (!foroAbierto || foroSaliendo) return;
+
+    const html = document.documentElement;
+    const body = document.body;
+    let lockY = null;
+    let raf = 0;
+    const inicio = performance.now();
+
+    // Posición final de la página con el foro justo bajo la barra,
+    // limitada a lo que la página realmente puede desplazarse.
+    const calcularObjetivo = () => {
+      const el = foroRef.current;
+      if (!el) return null;
+      const max = Math.max(0, html.scrollHeight - window.innerHeight);
+      const y = el.getBoundingClientRect().top + window.scrollY - 70;
+      return Math.min(Math.max(0, y), max);
+    };
+
+    const activar = () => {
+      const y = calcularObjetivo();
+      if (y === null) return;
+      lockY = y;
+      // scroll-behavior: auto evita que el CSS "smooth" convierta el
+      // reposicionamiento en una animación (el efecto raro en Safari).
+      html.style.scrollBehavior = "auto";
+      window.scrollTo(0, lockY);
+      html.style.scrollbarGutter = "stable"; // evita el salto de ancho al ocultar la barra
+      html.style.overflow = "hidden";
+      html.style.overscrollBehavior = "none";
+      body.style.overscrollBehavior = "none";
+    };
+
+    // Espera a que termine el scroll suave (o a un tope de seguridad)
+    const esperar = () => {
+      const y = calcularObjetivo();
+      const llego = y !== null && Math.abs(window.scrollY - y) < 2;
+      if (llego || performance.now() - inicio > FORO_SCROLL_MS * 2) {
+        activar();
+      } else {
+        raf = requestAnimationFrame(esperar);
+      }
+    };
+    raf = requestAnimationFrame(esperar);
+
+    // Un panel con scroll interno solo puede desplazarse si de verdad tiene
+    // contenido por recorrer en esa dirección; si no, el gesto se cancela
+    // para que no "se escape" hacia la página.
+    const puedeDesplazarse = (target, direccion) => {
+      const panel = target instanceof Element ? target.closest(".vp-sin-barra") : null;
+      if (!panel) return false;
+      const max = panel.scrollHeight - panel.clientHeight;
+      if (max <= 1) return false;
+      return direccion < 0 ? panel.scrollTop > 0 : panel.scrollTop < max - 1;
+    };
+
+    const onWheel = (e) => {
+      if (puedeDesplazarse(e.target, e.deltaY)) return;
+      e.preventDefault();
+    };
+
+    let touchY = 0;
+    const onTouchStart = (e) => {
+      touchY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e) => {
+      const y = e.touches[0].clientY;
+      const direccion = touchY - y; // > 0: el dedo sube = la página quiere bajar
+      touchY = y;
+      if (puedeDesplazarse(e.target, direccion)) return;
+      e.preventDefault();
+    };
+
+    const TECLAS = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "];
+    const onKeyDown = (e) => {
+      if (!TECLAS.includes(e.key)) return;
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      // Escribir / mover un control sigue funcionando; la barra espaciadora
+      // además debe seguir activando botones y enlaces.
+      const selector =
+        e.key === " "
+          ? "input, textarea, select, button, a, [role='slider']"
+          : "input, textarea, select, [role='slider']";
+      if (t.closest(selector)) return;
+      e.preventDefault();
+    };
+
+    // Red de seguridad: si algo logra mover la página, vuelve a su sitio.
+    const onScroll = () => {
+      if (lockY !== null && Math.abs(window.scrollY - lockY) > 1) {
+        window.scrollTo(0, lockY);
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("scroll", onScroll);
+      html.style.overflow = "";
+      html.style.overscrollBehavior = "";
+      html.style.scrollbarGutter = "";
+      html.style.scrollBehavior = "";
+      body.style.overscrollBehavior = "";
+    };
+  }, [foroAbierto, foroSaliendo]);
+
   const [displaySection, setDisplaySection] = useState(activeSection);
   const [sectionVisible, setSectionVisible] = useState(true);
   const sectionFadeTimeoutRef = useRef(null);
@@ -342,6 +525,16 @@ export default function JuruPrototype() {
     }, SECTION_FADE_MS);
     return () => clearTimeout(sectionFadeTimeoutRef.current);
   }, [activeSection, displaySection]);
+
+  // Fondo del body igual al de la página (evita franjas claras al hacer
+  // scroll elástico) y arranque siempre desde la portada.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    document.body.style.background = "#12100D";
+    return () => {
+      document.body.style.background = "";
+    };
+  }, []);
 
   const targetSeccion =
     activeSection === TODOS_ID ? SECCION_TODOS : SECCIONES.find((s) => s.id === activeSection);
@@ -442,6 +635,72 @@ export default function JuruPrototype() {
     setPlaying((p) => !p);
   };
 
+  // ---- Barra de progreso interactiva (clic / arrastrar / teclado) --------
+  const barRef = useRef(null);
+  const [scrubbing, setScrubbing] = useState(false);
+
+  // Duración "real" del audio: la del elemento si el navegador ya la conoce,
+  // y si no, la que calculamos al grabar.
+  const getTotal = () => {
+    const a = audioRef.current;
+    if (a && isFinite(a.duration) && a.duration > 0) return a.duration;
+    return active ? active.duration : 0;
+  };
+
+  const seekTo = (seconds) => {
+    const a = audioRef.current;
+    if (!a || !active) return;
+    const total = getTotal();
+    const t = Math.min(total, Math.max(0, seconds));
+    a.currentTime = t;
+    setProgress(t);
+  };
+
+  const seekFromClientX = (clientX) => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const rect = bar.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    seekTo(frac * getTotal());
+  };
+
+  const onBarPointerDown = (e) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setScrubbing(true);
+    seekFromClientX(e.clientX);
+  };
+  const onBarPointerMove = (e) => {
+    if (scrubbing) seekFromClientX(e.clientX);
+  };
+  const onBarPointerUp = (e) => {
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    setScrubbing(false);
+  };
+  const onBarKeyDown = (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); seekTo(progress + 5); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); seekTo(progress - 5); }
+    else if (e.key === "Home") { e.preventDefault(); seekTo(0); }
+    else if (e.key === "End") { e.preventDefault(); seekTo(getTotal()); }
+  };
+
+  // Los audios grabados con MediaRecorder (webm) suelen llegar sin duración
+  // ni "índice" para saltar, y por eso el navegador no deja mover la barra.
+  // Truco estándar: saltar al final una vez para que calcule la duración y
+  // volver al inicio; desde ahí ya se puede retroceder/adelantar.
+  const handleAudioMetadata = (e) => {
+    const a = e.currentTarget;
+    if (isFinite(a.duration)) return;
+    const volver = () => {
+      a.removeEventListener("timeupdate", volver);
+      a.currentTime = 0;
+    };
+    a.addEventListener("timeupdate", volver);
+    a.currentTime = 1e101;
+  };
+
   const startRecording = async () => {
     setMicError("");
     try {
@@ -515,6 +774,39 @@ export default function JuruPrototype() {
     setIsRecording(false);
   };
 
+  // Subida: transición inversa a la de bajar. El foro se desvanece mientras
+  // la página sube suavemente a la portada; al terminar, el foro se cierra
+  // (así "¿Qué quieres compartir hoy?" vuelve a funcionar igual que al inicio).
+  const volverALaPortada = () => {
+    if (foroSaliendo) return;
+    if (isRecording) stopRecording();
+    if (audioRef.current) audioRef.current.pause();
+    setPlaying(false);
+    setForoSaliendo(true); // esto también libera el bloqueo de scroll
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    });
+
+    // El foro solo se cierra cuando la página YA llegó arriba (y el fundido
+    // terminó). Con un tiempo fijo, si la subida suave tardaba más, el foro
+    // se desmontaba a mitad de camino, la página se encogía de golpe y el
+    // navegador la reubicaba bruscamente; eso se notaba al volver a bajar.
+    const inicio = performance.now();
+    const esperarSubida = () => {
+      const t = performance.now() - inicio;
+      const arriba = window.scrollY <= 1;
+      if ((arriba && t >= FORO_SALIDA_MS) || t > FORO_SALIDA_MS * 3) {
+        if (window.scrollY > 1) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        setForoAbierto(false);
+        setForoSaliendo(false);
+        setActiveId(null);
+      } else {
+        salidaRef.current = requestAnimationFrame(esperarSubida);
+      }
+    };
+    salidaRef.current = requestAnimationFrame(esperarSubida);
+  };
+
   const prevActiveSectionRef = useRef(activeSection);
   useEffect(() => {
     if (prevActiveSectionRef.current !== activeSection) {
@@ -542,33 +834,139 @@ export default function JuruPrototype() {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden flex flex-col"
+      className="relative w-full min-h-screen flex flex-col"
       style={{ background: "#12100D", color: "#EDE6D8", fontFamily: "'Inter', sans-serif" }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fredoka:wght@400;500&family=Judson:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fredoka:wght@400;500&family=Judson:wght@400&family=Comfortaa:wght@300;400&display=swap');
         :root {
           --ease-figma: cubic-bezier(0.42, 0, 1, 1);
           --ease-slide: cubic-bezier(0, 0, 0.58, 1);
         }
+        /* scrollbar-gutter reserva siempre el espacio de la barra de scroll:
+           así el ancho de la página no cambia cuando el foro aparece/desaparece
+           ni cuando se bloquea el scroll (era otro "reacomodo" visible). */
+        html { scroll-behavior: smooth; scrollbar-gutter: stable; }
         @keyframes juruPulse { 0% { box-shadow: 0 0 0 0 rgba(193,80,46,0.55); } 100% { box-shadow: 0 0 0 14px rgba(193,80,46,0); } }
         @keyframes vocesCanvasIn { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
         @keyframes vocesAsideIn { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes vocesFloatIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes vocesNavIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes vnMenuIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes vpFadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes vpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes vpFadeOut { from { opacity: 1; } to { opacity: 0; } }
         .voces-canvas { animation: vocesCanvasIn 800ms cubic-bezier(.22,1,.36,1) both; }
         .voces-aside { animation: vocesAsideIn 650ms cubic-bezier(.22,1,.36,1) 100ms both; }
         .voces-header { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 260ms both; }
         .voces-controls { animation: vocesFloatIn 600ms cubic-bezier(.22,1,.36,1) 420ms both; }
         .voces-nav { animation: vocesNavIn 500ms cubic-bezier(.22,1,.36,1) both; }
         @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
           .voces-canvas, .voces-aside, .voces-header, .voces-controls, .voces-nav { animation: none; }
+          .vp-anim, .vp-foro { animation: none !important; }
         }
+
+        /* ---------- Portada "Formar la palabra" ---------- */
+        .vp-intro {
+          position: relative;
+          overflow: hidden;
+          min-height: calc(100vh - 70px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 90px 24px 100px;
+          background: #12100D;
+          color: #fff;
+          font-family: 'Comfortaa', 'Fredoka', sans-serif;
+          font-weight: 300;
+        }
+        .vp-ramas {
+          position: absolute;
+          pointer-events: none;
+          user-select: none;
+          max-width: none;
+          animation: vpFadeIn 1200ms var(--ease-slide) 150ms both;
+        }
+        .vp-ramas--der { top: 0; right: 0; width: min(62vw, 900px); }
+        .vp-ramas--izq { bottom: 0; left: 0; width: min(44vw, 640px); }
+        .vp-contenido {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+          max-width: 470px;
+          text-align: center;
+        }
+        .vp-titulo {
+          margin: 0 0 54px;
+          font: 300 clamp(40px, 5vw, 66px)/1.2 'Comfortaa', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: .01em;
+          animation: vpFadeUp 800ms var(--ease-slide) 100ms both;
+        }
+        .vp-texto {
+          margin: 0;
+          font: 300 clamp(15px, 1.45vw, 19px)/1.27 'Comfortaa', sans-serif;
+          animation: vpFadeUp 800ms var(--ease-slide) 250ms both;
+        }
+        .vp-subtitulo {
+          margin: 22px 0 40px;
+          font: 300 clamp(22px, 2.3vw, 30px)/1.3 'Comfortaa', sans-serif;
+          animation: vpFadeUp 800ms var(--ease-slide) 380ms both;
+        }
+        .vp-texto--2 { animation-delay: 500ms; }
+        .vp-boton {
+          margin-top: 30px;
+          padding: 14px 29px;
+          border: 1px solid #fff;
+          border-radius: 999px;
+          background: transparent;
+          color: #fff;
+          cursor: pointer;
+          font: 500 clamp(16px, 1.5vw, 20px) 'Fredoka', sans-serif;
+          animation: vpFadeUp 800ms var(--ease-slide) 650ms both;
+          transition: background 500ms var(--ease-figma), transform 300ms var(--ease-slide);
+        }
+        .vp-boton:hover { background: rgba(255,255,255,.16); transform: translateY(-2px); }
+        .vp-foro {
+          /* El foro ocupa exactamente la pantalla visible bajo la barra, para
+             que se vea completo (rama de arriba y botón de grabar). */
+          height: calc(100vh - 70px);
+          height: calc(100dvh - 70px);
+          min-height: 460px;
+          animation: vpFadeIn 700ms var(--ease-slide) both;
+        }
+        /* Salida: mismo fundido que al entrar, pero hacia afuera */
+        .vp-foro--saliendo { animation: vpFadeOut 700ms var(--ease-figma) forwards; }
+        @media (max-width: 767px) { .vp-foro { min-height: 640px; } }
+        .vp-boton:focus-visible { outline: 2px solid #d3da63; outline-offset: 4px; }
+
+        /* Paneles del foro: se pueden desplazar pero sin mostrar la barra */
+        .vp-sin-barra { scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior: contain; }
+        .vp-sin-barra::-webkit-scrollbar { display: none; }
+
+        /* Botón para volver a la portada (menú lateral del foro) */
+        .vp-volver {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin: 0 auto 18px;
+          padding: 7px 16px 7px 12px;
+          border: 1px solid #5C5346;
+          border-radius: 999px;
+          background: rgba(28,25,20,.78);
+          color: #EDE6D8;
+          cursor: pointer;
+          font: 500 12px 'Fredoka', sans-serif;
+          transition: background .25s ease, border-color .25s ease, transform .25s ease;
+        }
+        .vp-volver:hover { background: #C1502E; border-color: #C1502E; transform: translateY(-2px); }
+        .vp-volver:focus-visible { outline: 2px solid #d3da63; outline-offset: 3px; }
 
         /* ---------- Barra de navegación (misma del Home) ---------- */
         .vn-bar {
-          position: relative;
+          position: sticky;
+          top: 0;
           z-index: 40;
           flex-shrink: 0;
           height: 70px;
@@ -576,9 +974,10 @@ export default function JuruPrototype() {
           grid-template-columns: 1fr auto 1fr;
           align-items: center;
           padding: 0 4.5vw;
-          background: rgba(59,59,59,.28);
+          /* Mismo color que antes (gris translúcido sobre el fondo oscuro),
+             pero sólido: ahora la barra queda fija al hacer scroll. */
+          background: #1E1C1A;
           border-bottom: 1px solid #26221B;
-          backdrop-filter: blur(2px);
         }
         .vn-logo-wrap { justify-self: start; }
         .vn-logo { width: 86px; height: auto; display: block; }
@@ -645,16 +1044,21 @@ export default function JuruPrototype() {
         @media (max-width: 900px) {
           .vn-links, .vn-club { display: none; }
           .vn-menu-btn { display: block; }
+          .vp-ramas--der { width: 90vw; opacity: .55; }
+          .vp-ramas--izq { width: 70vw; opacity: .55; }
         }
         @media (max-width: 560px) {
           .vn-bar { padding: 0 20px; }
           .vn-logo { width: 74px; }
+          .vp-intro { padding: 70px 22px 80px; }
+          .vp-titulo { margin-bottom: 36px; }
         }
       `}</style>
 
       <audio
         ref={audioRef}
         src={active?.audioURL}
+        onLoadedMetadata={handleAudioMetadata}
         onTimeUpdate={(e) => setProgress(e.currentTarget.currentTime)}
         onEnded={() => setPlaying(false)}
       />
@@ -708,16 +1112,54 @@ export default function JuruPrototype() {
         </div>
       )}
 
-      {/* ------------------- Contenido (debajo de la barra) ------------------- */}
+      {/* ------------------- Portada: Formar la palabra ------------------- */}
+      <section className="vp-intro" aria-label="Formar la palabra">
+        <img className="vp-ramas vp-ramas--der vp-anim" src={ramasDerecha} alt="" aria-hidden="true" />
+        <img className="vp-ramas vp-ramas--izq vp-anim" src={ramasIzquierda} alt="" aria-hidden="true" />
+
+        <div className="vp-contenido">
+          <h1 className="vp-titulo vp-anim">Formar la palabra</h1>
+
+          <p className="vp-texto vp-anim">
+            Desde 2018, JURU ha sido un espacio para encontrarnos, aprender, crear y compartir entre mujeres del Resguardo Indígena La Trina. Aquí, cada experiencia, saber y relato tiene un lugar.
+          </p>
+
+          <p className="vp-subtitulo vp-anim">Este espacio nace para continuar esa conversación</p>
+
+          <p className="vp-texto vp-texto--2 vp-anim">
+Comparte tus experiencias, los aprendizajes de los talleres de tu cajita mensual, tus técnicas artesanales, ideas y opiniones. ¡Este foro también es tuyo, participa! Publica tus creaciones, comparte tus dudas, intercambia consejos y anímate a aprender de otras mujeres. Cada aporte cuenta y puede inspirar nuevas ideas para crear y emprender juntas.
+Porque cuando ponemos nuestros conocimientos en común, nuestras voces se fortalecen y crecemos juntas como comunidad de artesanas.          </p>
+
+          <button type="button" className="vp-boton vp-anim" onClick={irAlForo}>
+            ¿Qué quieres compartir hoy?
+          </button>
+        </div>
+      </section>
+
+      {/* ------------------- Foro de voces (debajo de la portada) ------------------- */}
+      {foroAbierto && (
+      <section
+        id="foro"
+        ref={foroRef}
+        className={`vp-foro ${foroSaliendo ? "vp-foro--saliendo" : ""} relative flex flex-col overflow-hidden`}
+        style={{ scrollMarginTop: 70 }}
+        aria-label="Foro de voces"
+      >
       <div className="relative flex-1 min-h-0 flex flex-col md:flex-row">
         {/* Columna izquierda: menú de secciones + panel de relato.
             En escritorio el panel va justo debajo del menú; en móvil el
             wrapper no es "relative", así el panel se ancla al fondo. */}
-        <div className="static md:relative md:w-56 shrink-0 md:self-start">
+        <div className="static md:relative md:w-[17rem] shrink-0 md:flex md:flex-col">
           <aside
-            className="voces-aside w-full overflow-y-auto px-6 pt-6 pb-8 border-b md:border-r"
+            className="voces-aside w-full md:shrink-0 px-5 pt-6 pb-8 border-b md:border-r"
             style={{ borderColor: "#26221B" }}
           >
+            {/* Única forma de volver a la portada desde el foro */}
+            <button type="button" className="vp-volver" onClick={volverALaPortada} aria-label="Volver a la portada">
+              <ArrowUp size={15} />
+              Volver
+            </button>
+
             <div className="italic text-sm text-center mb-6" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
               Dejando huella
             </div>
@@ -729,7 +1171,7 @@ export default function JuruPrototype() {
                   <div
                     key={s.id}
                     onClick={() => setActiveSection(s.id)}
-                    className="flex items-center gap-2 cursor-pointer select-none"
+                    className="flex items-center gap-2 whitespace-nowrap cursor-pointer select-none"
                     style={{ color: isActive ? "#EDE6D8" : "#8A7C63", transition: "color 0.25s ease" }}
                     onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#B5A88F"; }}
                     onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#8A7C63"; }}
@@ -751,7 +1193,7 @@ export default function JuruPrototype() {
               <div className="mt-1 pt-3 border-t" style={{ borderColor: "#26221B" }}>
                 <div
                   onClick={() => setActiveSection(TODOS_ID)}
-                  className="flex items-center gap-2 cursor-pointer select-none font-medium"
+                  className="flex items-center gap-2 whitespace-nowrap cursor-pointer select-none font-medium"
                   style={{
                     color: activeSection === TODOS_ID ? "#EDE6D8" : "#8A7C63",
                     transition: "color 0.25s ease",
@@ -782,7 +1224,7 @@ export default function JuruPrototype() {
 
           {active ? (
             <div
-              className="absolute left-4 right-4 bottom-8 md:left-4 md:right-auto md:bottom-auto md:top-full md:mt-4 md:w-[440px] rounded-xl px-4 py-4 md:px-6 md:py-5 md:max-h-[calc(100vh-340px)] md:overflow-y-auto z-30"
+              className="vp-sin-barra absolute left-4 right-4 bottom-8 md:relative md:left-auto md:right-auto md:bottom-auto md:mt-4 md:mb-6 md:ml-4 md:w-[420px] md:min-h-0 rounded-xl px-4 py-4 md:px-6 md:py-4 md:overflow-y-auto z-30"
               style={{ background: "rgba(28,25,20,0.92)", border: "1px solid #33291F", backdropFilter: "blur(6px)" }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -811,21 +1253,58 @@ export default function JuruPrototype() {
                 </button>
 
                 <div className="flex-1">
-                  <div className="relative h-1.5 rounded-full" style={{ background: "#33291F" }}>
-                    <div
-                      className="absolute left-0 top-0 h-1.5 rounded-full"
-                      style={{ width: `${Math.min(100, (progress / active.duration) * 100)}%`, background: active.color, transition: "width 0.2s linear" }}
-                    />
-                    {Array.from({ length: active.knots }).map((_, i) => (
+                  {/* Zona de toque más alta que la barra para que sea fácil de agarrar */}
+                  <div
+                    ref={barRef}
+                    role="slider"
+                    tabIndex={0}
+                    aria-label="Posición de la grabación"
+                    aria-valuemin={0}
+                    aria-valuemax={Math.round(active.duration)}
+                    aria-valuenow={Math.round(progress)}
+                    aria-valuetext={`${fmt(progress)} de ${fmt(active.duration)}`}
+                    className="relative py-2 -my-2 cursor-pointer select-none outline-none"
+                    style={{ touchAction: "none" }}
+                    onPointerDown={onBarPointerDown}
+                    onPointerMove={onBarPointerMove}
+                    onPointerUp={onBarPointerUp}
+                    onPointerCancel={onBarPointerUp}
+                    onKeyDown={onBarKeyDown}
+                  >
+                    <div className="relative h-1.5 rounded-full" style={{ background: "#33291F" }}>
                       <div
-                        key={i}
-                        className="absolute rounded-full"
+                        className="absolute left-0 top-0 h-1.5 rounded-full"
                         style={{
-                          left: `${((i + 1) / (active.knots + 1)) * 100}%`,
-                          top: -1.5, width: 4.5, height: 4.5, background: "#8A7C63",
+                          width: `${Math.min(100, (progress / (getTotal() || 1)) * 100)}%`,
+                          background: active.color,
+                          transition: scrubbing ? "none" : "width 0.2s linear",
                         }}
                       />
-                    ))}
+                      {Array.from({ length: active.knots }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute rounded-full"
+                          style={{
+                            left: `${((i + 1) / (active.knots + 1)) * 100}%`,
+                            top: -1.5, width: 4.5, height: 4.5, background: "#8A7C63",
+                          }}
+                        />
+                      ))}
+                      {/* Perilla que marca el momento actual */}
+                      <div
+                        className="absolute rounded-full"
+                        style={{
+                          left: `${Math.min(100, (progress / (getTotal() || 1)) * 100)}%`,
+                          top: "50%",
+                          width: scrubbing ? 16 : 12,
+                          height: scrubbing ? 16 : 12,
+                          transform: "translate(-50%, -50%)",
+                          background: active.color,
+                          boxShadow: "0 0 0 3px rgba(18,16,13,0.9)",
+                          transition: scrubbing ? "width .15s, height .15s" : "left 0.2s linear, width .15s, height .15s",
+                        }}
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-between text-xs mt-1.5" style={{ color: "#8A7C63", fontFamily: "'IBM Plex Mono', monospace" }}>
                     <span>{fmt(progress)}</span>
@@ -836,7 +1315,7 @@ export default function JuruPrototype() {
             </div>
           ) : (
             <div
-              className="absolute left-4 right-4 bottom-8 md:left-4 md:right-auto md:bottom-auto md:top-full md:mt-4 md:w-[380px] rounded-xl px-4 py-4 md:px-6 md:py-5 md:max-h-[calc(100vh-340px)] md:overflow-y-auto z-30"
+              className="vp-sin-barra absolute left-4 right-4 bottom-8 md:relative md:left-auto md:right-auto md:bottom-auto md:mt-4 md:mb-6 md:ml-4 md:w-[420px] md:min-h-0 rounded-xl px-4 py-4 md:px-6 md:py-4 md:overflow-y-auto z-30"
               style={{ background: "rgba(28,25,20,0.75)", border: "1px dashed #33291F" }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -853,7 +1332,7 @@ export default function JuruPrototype() {
                   >
                     Preguntas para inspirarte
                   </div>
-                  <ul className="flex flex-col gap-1.5 text-xs" style={{ color: "#B5A88F" }}>
+                  <ul className="flex flex-col gap-1 text-xs" style={{ color: "#B5A88F" }}>
                     {targetSeccion.questions.map((q, i) => (
                       <li key={i} className="leading-snug">
                         {q}
@@ -941,6 +1420,8 @@ export default function JuruPrototype() {
           )}
         </main>
       </div>
+      </section>
+      )}
     </div>
   );
 }

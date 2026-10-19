@@ -1,19 +1,19 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, MessageCircle, Play } from "lucide-react";
+import { Menu, X, Play } from "lucide-react";
 
 // Logo que ya usas en Home
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
 
 // Imágenes y video de Club Creativo — colócalos en src/images/dona/ con
 // estos nombres de archivo (o cambia aquí la extensión si es otra).
-import clubHeroFondo from "./images/clubCreativo_img/juru-club_fondo_mesa_manualidades.png";
-import clubVideo from "./images/clubCreativo_img/hero_dona.mp4";
-import clubCajita from "./images/clubCreativo_img/juru-club_cajita_contenido_universo.png";
-import clubTaller from "./images/clubCreativo_img/juru-club_taller_mujeres_manualidades.png";
+import clubHeroFondo from "../images/clubCreativo_img/juru-club_fondo_mesa_manualidades.png";
+import clubVideo from "../images/clubCreativo_img/juru-video_creativo.mp4";
+import clubCajita from "../images/clubCreativo_img/juru-club_cajita_contenido_universo.png";
+import clubTaller from "../images/clubCreativo_img/juru-club_taller_mujeres_manualidades.png";
 
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
+const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
 
 const PLANES = [
   { id: "mensual", titulo: "Mensual", subtitulo: "Pago mes a mes", precio: "$ 99.000 cop / caja", tipo: "Pago mensual recurrente" },
@@ -62,20 +62,55 @@ function Reveal({ children, className = "", delay = 0, duration = 500 }) {
   );
 }
 
-const IconoInstagram = () => (
-  <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect x="3" y="3" width="18" height="18" rx="5" />
-    <circle cx="12" cy="12" r="4" />
-    <circle cx="17.3" cy="6.7" r="0.8" fill="currentColor" />
+// ---- Íconos de redes sociales (footer, igual que en home.jsx) ------------
+const iconProps = {
+  viewBox: "0 0 48 48",
+  width: 46,
+  height: 46,
+  "aria-hidden": true,
+  focusable: "false",
+};
+
+const IconInstagram = () => (
+  <svg {...iconProps} fill="none" stroke="currentColor" strokeWidth="4">
+    <rect x="5" y="5" width="38" height="38" rx="11" />
+    <circle cx="24" cy="24" r="9" />
+    <circle cx="35" cy="13" r="2" fill="currentColor" stroke="none" />
   </svg>
 );
 
-const IconoFacebook = () => (
-  <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M13.5 21v-7.5H16l.4-3h-2.9V8.7c0-.9.3-1.5 1.5-1.5h1.5V4.5c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.3H8v3h2.6V21" />
+const IconFacebook = () => (
+  <svg {...iconProps}>
+    <circle cx="24" cy="24" r="22" fill="currentColor" />
+    <path
+      d="M26.5 41V27.5h4.4l.7-5.2h-5.1v-3.3c0-1.5.4-2.5 2.6-2.5h2.7V12c-.5-.1-2.1-.2-4-.2-4 0-6.6 2.4-6.6 6.8v3.7h-4.4v5.2h4.4V41z"
+      fill="#272626"
+    />
   </svg>
 );
+
+const IconWhatsapp = () => (
+  <svg {...iconProps}>
+    <path
+      d="M24 5C13.5 5 5 13.5 5 24c0 3.6 1 7 2.8 9.9L5 43l9.4-2.7A19 19 0 0 0 24 43c10.5 0 19-8.5 19-19S34.5 5 24 5z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M17.5 14.5c-.6 0-1.4.3-1.9 1-.7.9-1.4 2.2-.9 4 .8 2.9 3.2 6.2 6.4 8.7 3.2 2.4 6.1 3.2 8 2.7 1.3-.4 2.4-1.6 2.6-2.8.1-.5-.1-.8-.5-1l-3.4-1.6c-.4-.2-.8-.1-1.1.2l-1.3 1.5c-.2.2-.5.3-.8.2-1.8-.8-4.3-3-5.2-4.7-.1-.3-.1-.6.1-.8l1-1.3c.3-.4.3-.8.1-1.2L18.9 15c-.2-.3-.7-.5-1.4-.5z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+// Enlaces de las redes: se mantienen los que ya tenía esta página.
+const REDES = [
+  { name: "Instagram", label: "@juru.marca", href: "https://instagram.com/jurumarca", external: true, Icon: IconInstagram },
+  { name: "Facebook", label: "juru marca", href: "#", external: true, Icon: IconFacebook },
+  { name: "WhatsApp", label: "315 55 555", href: "https://wa.me/57315555555", external: true, Icon: IconWhatsapp },
+];
 
 export default function ClubCreativo() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -382,9 +417,17 @@ export default function ClubCreativo() {
           align-items: start;
         }
         .cc-foto { position: relative; z-index: 1; width: 370px; height: 610px; object-fit: cover; display: block; }
+        /* Bloque "Términos y condiciones": el margen superior que antes tenía la
+           lista ahora lo tiene el bloque, para que el título quede arriba. */
+        .cc-terminos { margin-top: 270px; }
+        .cc-terminos-titulo {
+          margin: 0 0 14px;
+          font: 400 24px/1.2 'Fredoka', sans-serif;
+          color: var(--juru-cream);
+        }
         .cc-notas {
           list-style: none;
-          margin: 270px 0 0;
+          margin: 0;
           padding: 0;
           width: min(100%, 435px);
           display: flex;
@@ -402,7 +445,7 @@ export default function ClubCreativo() {
         .cc-news {
           position: relative;
           min-height: 230px;
-          padding: 70px 0 60px 68px;
+          padding: 70px 0 120px 68px;
           background: var(--cc-arena);
           color: var(--juru-brown);
         }
@@ -417,7 +460,7 @@ export default function ClubCreativo() {
         }
         .cc-news:hover .cc-news-circulo { transform: scale(1.05); }
         .cc-news-inner { position: relative; z-index: 2; max-width: 520px; }
-        .cc-news h2 { margin: 0; font: 400 clamp(30px, 3.4vw, 40px)/1.5 'Caveat Brush', cursive; color: #6b2a12; }
+        .cc-news h2 { margin: 0; text-align: center; font: 400 clamp(30px, 3.4vw, 40px)/1.5 'Caveat Brush', cursive; color: #6b2a12; }
         .cc-form-campo {
           display: flex;
           margin-top: 26px;
@@ -449,31 +492,85 @@ export default function ClubCreativo() {
           transition: filter 500ms var(--ease-figma);
         }
         .cc-form-campo button:hover { filter: brightness(1.1); }
-        .cc-check {
-          display: flex;
-          gap: 16px;
-          align-items: flex-start;
-          margin: 28px 0 0 38px;
-          max-width: 420px;
-          color: #fff;
-          font: 400 10px/1.35 'Instrument Sans', sans-serif;
-        }
-        .cc-check input { margin-top: 2px; accent-color: var(--juru-red); }
 
-        /* ---------------- FOOTER ---------------- */
-        .cc-footer { display: grid; grid-template-columns: 1.1fr 1fr; background: var(--juru-dark); color: #FFEAEA; min-height: 200px; }
-        .cc-redes { display: flex; gap: 54px; padding: 70px 0 40px 130px; border-right: 1px solid rgba(255,255,255,.25); }
-        .cc-red {
-          display: flex; flex-direction: column; align-items: center; gap: 8px;
-          text-decoration: none; color: #ddd; font: 400 11px 'Fredoka', sans-serif;
+        /* ---------------- FOOTER (igual al de home.jsx) ---------------- */
+        .cc-footer {
+          position: relative;
+          z-index: 4;
+          margin-top: -48px;
+          padding: 64px 8vw 34px;
+          border-radius: 50px 50px 0 0;
+          background: var(--juru-dark);
+          color: #FFEAEA;
+          font-family: 'Alevia DEMO', 'Judson', serif;
+        }
+        .cc-footer-main {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 60px;
+          align-items: start;
+        }
+        .cc-footer-left { max-width: 640px; }
+        .cc-footer-consent {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          cursor: pointer;
+          font: 400 15px/1.45 'Alevia DEMO', 'Judson', serif;
+        }
+        .cc-footer-consent input {
+          flex-shrink: 0;
+          width: 18px;
+          height: 18px;
+          margin: 2px 0 0;
+          accent-color: var(--juru-red);
+          cursor: pointer;
+        }
+        .cc-footer-social {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 44px;
+          margin: 40px 0 0;
+          padding: 0;
+          list-style: none;
+        }
+        .cc-footer-social a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          color: #FFEAEA;
+          text-decoration: none;
+          font: 400 14px 'Alevia DEMO', 'Judson', serif;
           transition: transform 300ms var(--ease-slide), opacity 500ms var(--ease-figma);
         }
-        .cc-red:hover { transform: translateY(-3px); opacity: .7; }
-        .cc-alt { position: relative; padding: 60px 40px 30px 40px; font: 400 11px 'Fredoka', sans-serif; text-align: center; max-width: 360px; }
-        .cc-alt p { margin: 0 0 14px; }
-        .cc-alt a { display: block; width: fit-content; margin: 0 auto 10px; text-decoration: none; color: #ddd; transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide); }
-        .cc-alt a:hover { opacity: .65; transform: translateX(3px); }
-        .cc-footer-logo { position: absolute; right: -230px; bottom: 22px; width: 105px; height: auto; }
+        .cc-footer-social a:hover { transform: translateY(-4px); opacity: .8; }
+        .cc-footer-support { text-align: center; }
+        .cc-footer-support-title { margin: 0 0 20px; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
+        .cc-footer-support a {
+          display: block;
+          width: fit-content;
+          margin: 0 auto 12px;
+          color: #FFEAEA;
+          text-decoration: none;
+          font: 400 15px 'Alevia DEMO', 'Judson', serif;
+          transition: opacity 500ms var(--ease-figma), transform 300ms var(--ease-slide);
+        }
+        .cc-footer-support a:hover { opacity: .65; transform: translateX(3px); }
+        .cc-footer-line {
+          height: 1px;
+          margin: 44px 0 26px;
+          background: linear-gradient(90deg, rgba(189,152,130,0), rgba(189,152,130,.7) 15%, rgba(189,152,130,.7) 85%, rgba(189,152,130,0));
+        }
+        .cc-footer-bottom {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+        .cc-footer-logo { width: 90px; height: auto; display: block; }
+        .cc-footer-credit { margin: 0; color: #FFEAEA; opacity: .85; font: 400 15px 'Alevia DEMO', 'Judson', serif; }
+        .cc-footer a:focus-visible, .cc-footer-consent input:focus-visible { outline: 2px solid #d3da63; outline-offset: 4px; }
 
         /* ---------------- MENÚ MÓVIL ---------------- */
         .cc-overlay { position: fixed; inset: 0; z-index: 50; background: #1F1B14; color: white; display: flex; flex-direction: column; animation: ccMenuIn 300ms var(--ease-slide) both; }
@@ -496,22 +593,24 @@ export default function ClubCreativo() {
           .cc-plan { height: auto; min-height: 340px; }
           .cc-detalle { grid-template-columns: 1fr; gap: 24px; margin-top: 40px; padding: 0 20px; }
           .cc-foto { width: 100%; height: 360px; }
+          .cc-terminos { margin-top: 0; }
+          .cc-terminos-titulo { font-size: 22px; }
           .cc-notas { margin-top: 0; width: 100%; }
           .cc-notas li { font-size: 12px; padding: 10px 12px; }
-          .cc-news { padding: 60px 24px 40px; }
+          .cc-news { padding: 60px 24px 90px; }
           .cc-news-circulo { width: 140px; height: 140px; top: -50px; right: -30px; }
-          .cc-check { margin-left: 0; }
-          .cc-footer { grid-template-columns: 1fr; }
-          .cc-redes { padding: 40px 24px; justify-content: center; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.25); }
-          .cc-alt { max-width: none; padding: 30px 24px 80px; }
-          .cc-footer-logo { right: 24px; }
+          .cc-footer-main { grid-template-columns: 1fr; gap: 44px; }
+          .cc-footer-support { text-align: left; }
+          .cc-footer-support a { margin-left: 0; }
         }
 
         @media (max-width: 560px) {
           .cc-nav { padding: 0 20px; }
           .cc-logo { width: 74px; }
           .cc-title { font-size: 100px; }
-          .cc-redes { gap: 28px; }
+          .cc-footer { padding: 48px 24px 28px; border-radius: 36px 36px 0 0; }
+          .cc-footer-social { gap: 28px; }
+          .cc-footer-bottom { flex-direction: column; align-items: flex-start; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -605,7 +704,7 @@ export default function ClubCreativo() {
       <section className="cc-sub">
         <Reveal>
           <h2>Suscríbete para recibir tu cajita especial</h2>
-          <p>*Todos los 15 y 30 de cada mes podrás recibirla*</p>
+          <p>*Todos los 15 de cada mes podrás recibirla*</p>
         </Reveal>
       </section>
 
@@ -651,7 +750,8 @@ export default function ClubCreativo() {
 
         <div className="cc-detalle">
           <img className="cc-foto" src={clubTaller} alt="Mujeres artesanas en un taller creativo" />
-          <Reveal>
+          <Reveal className="cc-terminos">
+            <h3 className="cc-terminos-titulo">Términos y condiciones</h3>
             <ul className="cc-notas">
               {NOTAS.map((n, i) => (
                 <li key={i}>{n}</li>
@@ -667,7 +767,7 @@ export default function ClubCreativo() {
         <div className="cc-news-inner">
           <Reveal>
             <h2>¡Toma la iniciativa y entérate de <br />todo lo nuevo!</h2>
-            <form onSubmit={handleSubmit}>
+            <form id="cc-newsletter-form" onSubmit={handleSubmit}>
               <div className="cc-form-campo">
                 <input
                   type="email"
@@ -679,10 +779,6 @@ export default function ClubCreativo() {
                 />
                 <button type="submit">Suscríbete</button>
               </div>
-              <label className="cc-check">
-                <input type="checkbox" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} required />
-                <span>Declaro que la información obtenida para el tratamiento de mis datos personales la he suministrado de forma automática y/o manual y es verídica.</span>
-              </label>
             </form>
           </Reveal>
         </div>
@@ -690,27 +786,50 @@ export default function ClubCreativo() {
 
       {/* ------------------------ FOOTER ------------------------ */}
       <footer className="cc-footer">
-        <div className="cc-redes" aria-label="Redes sociales">
-          <a className="cc-red" href="https://instagram.com/jurumarca" target="_blank" rel="noreferrer">
-            <IconoInstagram />
-            <span>@jurumarca</span>
-          </a>
-          <a className="cc-red" href="#" target="_blank" rel="noreferrer">
-            <IconoFacebook />
-            <span>juru marca</span>
-          </a>
-          <a className="cc-red" href="https://wa.me/57315555555" target="_blank" rel="noreferrer">
-            <MessageCircle size={30} strokeWidth={1.8} />
-            <span>315 55 555</span>
-          </a>
+        <div className="cc-footer-main">
+          <div className="cc-footer-left">
+            <label className="cc-footer-consent">
+              <input
+                type="checkbox"
+                form="cc-newsletter-form"
+                required
+                checked={acepta}
+                onChange={(e) => setAcepta(e.target.checked)}
+              />
+              <span>
+                Declaro que la información obtenida para el tratamiento de mis datos personales la he suministrado de forma automática y/o manual y es verídica.
+              </span>
+            </label>
+
+            <ul className="cc-footer-social" aria-label="Redes sociales">
+              {REDES.map(({ name, label, href, external, Icon }) => (
+                <li key={name}>
+                  <a
+                    href={href}
+                    aria-label={name}
+                    {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                  >
+                    <Icon />
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="cc-footer-support">
+            <p className="cc-footer-support-title">Alternativas de apoyo</p>
+            <a href="/#dona">Compra</a>
+            <a href="/#dona">Dona</a>
+            <a href="#">Comparte</a>
+          </div>
         </div>
 
-        <div className="cc-alt">
-          <p>Alternativas de apoyo</p>
-          <a href="#">Compra</a>
-          <a href="#">Dona</a>
-          <a href="#">Comparte</a>
-          <img className="cc-footer-logo" src={juruLogo} alt="JURU" />
+        <div className="cc-footer-line" />
+
+        <div className="cc-footer-bottom">
+          <img src={juruLogo} alt="JURU" className="cc-footer-logo" />
+          <p className="cc-footer-credit">Este sitio está diseñado con todo el 🤍 por Edna Design</p>
         </div>
       </footer>
     </main>

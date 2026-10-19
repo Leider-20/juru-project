@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 // Logo (misma ruta que usa home.jsx)
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
 
 // Video de esta página — carpeta: src/images/documental_img/
 // Nombre que debes ponerle a tu archivo:
 //   juru-documental.mp4  -> el documental
-import videoDocumental from "./images/documental_mp4/juru-documental.mp4";
+import videoDocumental from "../images/documental_mp4/juru-documental.mp4";
 
 // Mismo menú que home.jsx. "Sobre nosotros" y "Memorias" son secciones de
 // la página principal, por eso apuntan a "/" con su ancla.
@@ -17,7 +17,7 @@ const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
 
 // A dónde lleva el botón "¡Quiero conocer más!". Cámbialo por la ruta que
 // corresponda (por ejemplo "/vive" o "/voces").
-const CONOCER_MAS_TO = "/documental"; // Cambia esto según tu necesidad
+const CONOCER_MAS_TO = "/vive"; // Cambia esto según tu necesidad
 
 const EASE_FIGMA = "cubic-bezier(0.42, 0, 1, 1)";
 const EASE_SLIDE = "cubic-bezier(0, 0, 0.58, 1)";

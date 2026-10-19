@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 // Logo (misma ruta que usa home.jsx)
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
 
 // Medios de esta página — carpeta: src/images/homeEventos_img/
 // Nombres que debes ponerle a tus archivos:
 //   juru-territorios-entramados.mp4  -> video de la izquierda (fotos en la pared)
 //   juru-instalacion-colcha.png      -> foto de la sala con la mesa y la colcha
-import videoTerritorios from "./images/homeEventos_img/juru-territorios-entramados.mp4";
-import instalacionColcha from "./images/homeEventos_img/juru-instalacion-colcha.png";
+import videoTerritorios from "../images/homeEventos_img/juru-territorios-entramados.mp4";
+import instalacionColcha from "../images/homeEventos_img/juru-instalacion-colcha.png";
 
 // Mismo menú que home.jsx. "Sobre nosotros" y "Memorias" son secciones de
 // la página principal, por eso apuntan a "/" con su ancla.
@@ -167,13 +167,14 @@ export default function HomeEventos() {
         /* ---------- Contenido ---------- */
         .evt-layout {
           display: grid;
-          grid-template-columns: 35.2% 1fr;
+          grid-template-columns: 44% 1fr;   /* antes 35.2%: columna del video más ancha */
           align-items: start;
         }
 
         /* El video se queda fijo mientras se lee el texto. Tiene el
            tamaño de su propia proporción (sin recortes ni franjas) y
-           queda centrado en la columna. */
+           queda centrado en la columna. Ahora ocupa casi todo el alto
+           disponible de la pantalla (sin el tope fijo de 560px). */
         .evt-media {
           position: sticky;
           top: 70px;
@@ -181,21 +182,25 @@ export default function HomeEventos() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 24px 32px;
+          padding: 16px 28px;
         }
         .evt-media video {
           display: block;
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: min(560px, calc(100vh - 118px));
+          /* Ocupa todo el ancho de la columna; el alto lo fija la pantalla
+             y el video se ajusta con "cover" (recorta un poco arriba y abajo
+             en vez de dejar franjas). */
+          width: 100%;
+          height: calc(100vh - 102px);
+          max-height: 760px;
+          object-fit: cover;
+          object-position: center;
           border-radius: 22px;
           box-shadow: 0 24px 40px -18px rgba(0,0,0,.55);
         }
 
         .evt-content {
           max-width: 800px;
-          padding: 135px 6vw 90px 83px;
+          padding: 135px 6vw 90px 56px;
         }
         .evt-title {
           max-width: 540px;
@@ -243,7 +248,7 @@ export default function HomeEventos() {
 
           .evt-layout { grid-template-columns: 1fr; }
           .evt-media { position: relative; top: 0; height: auto; padding: 28px 24px 0; }
-          .evt-media video { max-height: 60vh; }
+          .evt-media video { height: auto; max-height: 70vh; object-fit: contain; }
           .evt-content { padding: 40px 24px 70px; }
           .evt-title { font-size: 26px; }
           .evt-text { padding-left: 0; }

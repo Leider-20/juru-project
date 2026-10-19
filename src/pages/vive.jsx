@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
 
 // Logo que ya se usa en Home
-import juruLogo from "./images/juru-logo.png";
+import juruLogo from "../images/juru-logo.png";
 
 // Imágenes de "Vive JURU"
-import viveSol from "./images/vive_img/juru-vive_sol_decorativo.png";
-import vivePaisajeIzq from "./images/vive_img/juru-vive_paisaje_izquierda_cana_y_montana.png";
-import vivePaisajeDer from "./images/vive_img/juru-vive_paisaje_derecha_arbol_y_sendero.png";
-import viveBurro from "./images/vive_img/juru-vive_burro_con_carga.png";
-import iconoCaminos from "./images/vive_img/juru-vive_icono_sigue_caminos.png";
+import viveSol from "../images/vive_img/juru-vive_sol_decorativo.png";
+import vivePaisajeIzq from "../images/vive_img/juru-vive_paisaje_izquierda_cana_y_montana.png";
+import vivePaisajeDer from "../images/vive_img/juru-vive_paisaje_derecha_arbol_y_sendero.png";
+import viveBurro from "../images/vive_img/juru-vive_burro_con_carga.png";
+import iconoCaminos from "../images/vive_img/juru-vive_icono_sigue_caminos.png";
 
 const NAV_LINKS_IZQ = [{ label: "Sobre nosotros", href: "/#quienes-somos" }];
-const NAV_LINKS_DER = [{ label: "Memorias", href: "/#novedades" }];
+const NAV_LINKS_DER = [{ label: "Memorias", href: "/memorias" }];
 
 /* ----------------------------- Iconos de los pasos ----------------------------- */
 const svgProps = {
@@ -59,6 +59,9 @@ const PASOS = [
   { id: "mapa", Icono: IconoMapa, titulo: "Usa el mapa", texto: "para orientarte y elegir tu recorrido, dándole clic a los puntos" },
 ];
 
+// Destino del botón "Iniciar recorrido" (proyecto externo)
+const URL_RECORRIDO = "https://julifon23.itch.io/vive-360";
+
 export default function ViveJuru() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -93,7 +96,11 @@ export default function ViveJuru() {
         .vj-page {
           --u: calc(100vw / 1440);   /* 1u = 1px del diseño de 1440px */
           min-height: 100vh;
+          /* "hidden" convertía a esta página en su propio contenedor de scroll
+             (overflow-y pasaba a "auto") y mostraba una segunda barra.
+             "clip" recorta igual sin crear contenedor de scroll. */
           overflow-x: hidden;
+          overflow-x: clip;
           background: var(--vj-bg);
           color: #1d1d1d;
           font-family: 'Outfit', sans-serif;
@@ -104,7 +111,8 @@ export default function ViveJuru() {
 
         /* ---------------- BARRA DE NAVEGACIÓN ---------------- */
         .vj-bar {
-          position: relative;
+          position: sticky;   /* barra fija al hacer scroll */
+          top: 0;
           z-index: 40;
           height: 65px;
           display: grid;
@@ -203,7 +211,7 @@ export default function ViveJuru() {
           color: #fff;
         }
         .vj-tile svg { width: 56px; height: 56px; }
-        .vj-tile .vj-icono-img { width: 72px; height: 72px; object-fit: contain; display: block; }
+        .vj-tile .vj-icono-img { width: 100px; height: 100px; object-fit: contain; display: block; }
         .vj-label {
           width: 96%;
           margin-top: 12px;
@@ -215,7 +223,7 @@ export default function ViveJuru() {
           color: #111;
         }
         .vj-label strong { display: block; font-weight: 500; }
-        .vj-lema { order: 4; margin: 0; text-align: center; font-weight: 300; font-size: 30px; line-height: 1.2; color: var(--vj-olive); }
+        .vj-lema { order: 4; margin: 0; text-align: center; font-weight: 300; font-size: 30px; line-height: 1.2; color: var(--vj-olive); white-space: nowrap; }
         .vj-cta {
           order: 5;
           width: min(100%, 336px);
@@ -273,7 +281,7 @@ export default function ViveJuru() {
           .vj-paso { width: calc(var(--u) * 133); }
           .vj-tile { width: 100%; height: calc(var(--u) * 108); aspect-ratio: auto; border-radius: calc(var(--u) * 20); }
           .vj-tile svg { width: calc(var(--u) * 62); height: calc(var(--u) * 62); }
-          .vj-tile .vj-icono-img { width: calc(var(--u) * 80); height: calc(var(--u) * 80); }
+          .vj-tile .vj-icono-img { width: calc(var(--u) * 118); height: calc(var(--u) * 118); }
           .vj-label {
             width: calc(var(--u) * 127);
             min-height: calc(var(--u) * 65);
@@ -282,7 +290,9 @@ export default function ViveJuru() {
             font-size: max(9px, calc(var(--u) * 11));
           }
 
-          .vj-lema { left: calc(var(--u) * 596); top: calc(var(--u) * 945); width: calc(var(--u) * 300); font-size: calc(var(--u) * 36); line-height: calc(var(--u) * 42); z-index: 3; }
+          /* Más ancho (420) y recentrado (left 522) para que "Explora. Descubre."
+             quepa en un solo renglón y "Conecta" quede debajo, centrado con el botón. */
+          .vj-lema { left: calc(var(--u) * 522); top: calc(var(--u) * 945); width: calc(var(--u) * 420); white-space: nowrap; font-size: calc(var(--u) * 36); line-height: calc(var(--u) * 42); z-index: 3; }
           .vj-cta { left: calc(var(--u) * 564); top: calc(var(--u) * 1138); width: calc(var(--u) * 336); height: calc(var(--u) * 40); font-size: max(14px, calc(var(--u) * 20)); z-index: 3; }
         }
 
@@ -375,10 +385,10 @@ export default function ViveJuru() {
 
         <p className="vj-lema">Explora. Descubre.<br />Conecta</p>
 
-        {/* TODO: cambia la ruta cuando tengas la página del recorrido */}
-        <Link to="/recorrido" className="vj-cta">
+        {/* Enlace externo: abre el recorrido en otro proyecto */}
+        <a href={URL_RECORRIDO} className="vj-cta">
           Iniciar recorrido <ArrowRight size={18} />
-        </Link>
+        </a>
       </section>
     </main>
   );
