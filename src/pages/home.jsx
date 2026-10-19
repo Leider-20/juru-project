@@ -241,9 +241,10 @@ const IconWhatsapp = () => (
   </svg>
 );
 
-// Enlaces de las redes: reemplaza los "#" por los reales.
+// Enlaces de las redes: reemplaza los "#" por los reales (siempre con https://).
+// Los que empiezan por http se abren en una pestaña nueva (ver el footer).
 const REDES = [
-  { name: "Instagram", label: "@juru.marca", href: "#", Icon: IconInstagram },
+  { name: "Instagram", label: "@juru.marca", href: "https://www.instagram.com/juru.marca/", Icon: IconInstagram },
   { name: "Facebook", label: "juru marca", href: "#", Icon: IconFacebook },
   { name: "WhatsApp", label: "315 55 555", href: "#", Icon: IconWhatsapp },
 ];
@@ -1524,7 +1525,11 @@ export default function Home() {
             <ul className="footer-social" aria-label="Redes sociales">
               {REDES.map(({ name, label, href, Icon }) => (
                 <li key={name}>
-                  <a href={href} aria-label={name}>
+                  <a
+                    href={href}
+                    aria-label={name}
+                    {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
                     <Icon />
                     <span>{label}</span>
                   </a>

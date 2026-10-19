@@ -107,7 +107,7 @@ const IconWhatsapp = () => (
 
 // Enlaces de las redes: se mantienen los que ya tenía esta página.
 const REDES = [
-  { name: "Instagram", label: "@juru.marca", href: "https://instagram.com/jurumarca", external: true, Icon: IconInstagram },
+  { name: "Instagram", label: "@juru.marca", href: "https://www.instagram.com/juru.marca?dlrf=OW9iNzc4cGQxNnF2&utm_source=qr", external: true, Icon: IconInstagram },
   { name: "Facebook", label: "juru marca", href: "#", external: true, Icon: IconFacebook },
   { name: "WhatsApp", label: "315 55 555", href: "https://wa.me/57315555555", external: true, Icon: IconWhatsapp },
 ];
